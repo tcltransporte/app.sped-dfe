@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.10" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\libs\DFe\CTe.Classes\CTe.Classes.csproj" />
+    <ProjectReference Include="..\libs\DFe\CTe.Servicos\CTe.Servicos.csproj" />
+    <ProjectReference Include="..\libs\DFe\CTe.Utils\CTe.Utils.csproj" />
+    <ProjectReference Include="..\libs\DFe\CTe.Wsdl\CTe.Wsdl.csproj" />
+    <ProjectReference Include="..\libs\DFe\DFe.Utils\DFe.Utils.csproj" />
+    <ProjectReference Include="..\libs\DFe\NFe.Classes\NFe.Classes.csproj" />
+    <ProjectReference Include="..\libs\DFe\NFe.Servicos\NFe.Servicos.csproj" />
+    <ProjectReference Include="..\libs\DFe\NFe.Utils\NFe.Utils.csproj" />
+    <ProjectReference Include="..\libs\OpenAC.Net.NFSe.Nacional\OpenAC.Net.NFSe.Nacional.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\DFe\NFSe\Utils\" />
+  </ItemGroup>
+
+</Project>
