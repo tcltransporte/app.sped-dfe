@@ -1,4 +1,6 @@
 ﻿using application.services.Logging;
+using application.services.Controllers.DFe.NFSe.Providers;
+using application.services.Controllers.DFe.NFSe.Providers.ISSNET;
 using application.services.Services;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -30,6 +32,8 @@ builder.Services.AddControllers(options =>
 
 builder.Services.AddSingleton<SefazSoapService>();
 builder.Services.AddSingleton<ApiErrorFileLogger>();
+builder.Services.AddSingleton<INFSeProvider, IssNetGoianiaProvider>();
+builder.Services.AddSingleton<NFSeProviderResolver>();
 
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
@@ -118,3 +122,4 @@ app.UseCors("AllowAll");
 app.MapControllers();
 
 app.Run();
+
