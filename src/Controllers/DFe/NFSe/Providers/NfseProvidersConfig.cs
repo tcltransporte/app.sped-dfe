@@ -7,8 +7,6 @@ namespace application.services.Controllers.DFe.NFSe.Providers
         public string Ibge { get; init; } = string.Empty;
         public string Name { get; init; } = string.Empty;
         public string Uf { get; init; } = string.Empty;
-        public string Endpoint { get; init; } = string.Empty;
-        public string HomologationEndpoint { get; init; } = string.Empty;
         public bool Enabled { get; init; } = true;
     }
 
@@ -124,23 +122,21 @@ namespace application.services.Controllers.DFe.NFSe.Providers
         public string ResolveIssNetEndpoint(string? ibgeCode, bool useHomologation = false)
         {
             var issNet = GetProvider("ISSNET");
-            var municipality = FindMunicipality("ISSNET", ibgeCode);
 
-            if (municipality != null)
+            if (useHomologation)
             {
-                if (useHomologation && !string.IsNullOrWhiteSpace(municipality.HomologationEndpoint))
-                    return municipality.HomologationEndpoint;
-
-                if (!useHomologation && !string.IsNullOrWhiteSpace(municipality.Endpoint))
-                    return municipality.Endpoint;
+                return !string.IsNullOrWhiteSpace(issNet?.DefaultHomologationEndpoint)
+                    ? issNet.DefaultHomologationEndpoint
+                    : !string.IsNullOrWhiteSpace(issNet?.HomologationEndpoint)
+                        ? issNet.HomologationEndpoint
+                        : "https://nfse.issnetonline.com.br/wsnfsenacional/homologacao/nfse.asmx";
             }
-
-            if (useHomologation && !string.IsNullOrWhiteSpace(issNet?.DefaultHomologationEndpoint))
-                return issNet.DefaultHomologationEndpoint;
 
             return !string.IsNullOrWhiteSpace(issNet?.DefaultEndpoint)
                 ? issNet.DefaultEndpoint
-                : "https://nfse.issnetonline.com.br/wsnfsenacional/goiania/nfse.asmx";
+                : !string.IsNullOrWhiteSpace(issNet?.ProductionEndpoint)
+                    ? issNet.ProductionEndpoint
+                    : "https://nfse.issnetonline.com.br/wsnfsenacional/goiania/nfse.asmx";
         }
 
         public string ResolveNacionalEndpoint(bool useHomologation = false)
@@ -253,8 +249,6 @@ namespace application.services.Controllers.DFe.NFSe.Providers
                         Ibge = ibge,
                         Name = ((string?)munEl.Attribute("name") ?? string.Empty).Trim(),
                         Uf = ((string?)munEl.Attribute("uf") ?? string.Empty).Trim(),
-                        Endpoint = ((string?)munEl.Attribute("endpoint") ?? string.Empty).Trim(),
-                        HomologationEndpoint = ((string?)munEl.Attribute("homologationEndpoint") ?? string.Empty).Trim(),
                         Enabled = ParseBool((string?)munEl.Attribute("enabled"), true)
                     });
                 }
@@ -321,8 +315,6 @@ namespace application.services.Controllers.DFe.NFSe.Providers
                             Ibge = "5208707",
                             Name = "Goiânia",
                             Uf = "GO",
-                            Endpoint = "https://nfse.issnetonline.com.br/wsnfsenacional/goiania/nfse.asmx",
-                            HomologationEndpoint = "https://nfse.issnetonline.com.br/wsnfsenacional/homologacao/nfse.asmx",
                             Enabled = true
                         }
                     }

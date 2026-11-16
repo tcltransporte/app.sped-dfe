@@ -18,8 +18,6 @@
           ibge="5208707"
           name="Goiânia"
           uf="GO"
-          endpoint="https://nfse.issnetonline.com.br/wsnfsenacional/goiania/nfse.asmx"
-          homologationEndpoint="https://nfse.issnetonline.com.br/wsnfsenacional/homologacao/nfse.asmx"
           enabled="true" />
       </Municipalities>
     </Provider>
