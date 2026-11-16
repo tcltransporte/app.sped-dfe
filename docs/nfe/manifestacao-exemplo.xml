@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ManifestacaoDestinatario>
+  <!--
+    Modelo de XML para Manifestação do Destinatário (POST /DFe/nfe/manifestation).
+    - tpEvento (opcional, padrão 210200):
+      * 210200 = Confirmação da Operação
+      * 210210 = Ciência da Operação
+      * 210220 = Desconhecimento da Operação
+      * 210240 = Operação não Realizada
+  -->
+  <tpAmb>1</tpAmb>
+  <documento>04058687000177</documento>
+  <chNFE>52261104058687000177550010000001001123456780</chNFE>
+  <tpEvento>210200</tpEvento>
+  <nSeqEvento>1</nSeqEvento>
+</ManifestacaoDestinatario>
+

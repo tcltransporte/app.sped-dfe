@@ -170,6 +170,22 @@ namespace application.services.Controllers.DFe.NFSe.Providers
                 ? nacional.DanfseProductionEndpoint
                 : "https://adn.nfse.gov.br/danfse";
         }
+
+        public string ResolveNacionalAdnEndpoint(bool useHomologation = false)
+        {
+            var nacional = GetProvider("NACIONAL");
+
+            if (useHomologation)
+            {
+                return !string.IsNullOrWhiteSpace(nacional?.AdnHomologationEndpoint)
+                    ? nacional.AdnHomologationEndpoint
+                    : "https://adn.producaorestrita.nfse.gov.br/contribuintes";
+            }
+
+            return !string.IsNullOrWhiteSpace(nacional?.AdnProductionEndpoint)
+                ? nacional.AdnProductionEndpoint
+                : "https://adn.nfse.gov.br/contribuintes";
+        }
     }
 
     public sealed class NfseProvidersXmlStore

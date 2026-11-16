@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pedRegEvento xmlns="http://www.sped.fazenda.gov.br/nfse" versao="1.01">
+  <!--
+    XML comum de Cancelamento de NFS-e (aceito por todos os providers: NACIONAL, ISSNET, etc.).
+    - O provider é resolvido automaticamente pelos 7 primeiros dígitos de <chNFSe> (código IBGE do município emissor).
+    - O ambiente (Produção ou Homologação) é resolvido pela tag <tpAmb> (1 = Produção, 2 = Homologação).
+    - Cada provider adapta automaticamente este XML para o seu respectivo layout antes de assinar e enviar:
+      * NACIONAL: mantém <nPedRegEvento> (ex.: 001), evento <e101101>, monta Id com 62 posições
+        (PRE + chNFSe[50] + 101101 + nPedRegEvento[3]), assina e envia via GZip+Base64 JSON.
+      * ISSNET: remove <nPedRegEvento>, converte o evento para <e101103> (CancelEventType configurado),
+        monta Id com 59 posições (PRE + chNFSe[50] + 101103), envolve em <CancelarNfseEnvio>, assina e envia via SOAP.
+  -->
+  <infPedReg>
+    <tpAmb>2</tpAmb>
+    <verAplic>app.sped-dfe</verAplic>
+    <dhEvento>2026-11-16T10:30:00-03:00</dhEvento>
+    <CNPJAutor>04058687000177</CNPJAutor>
+    <chNFSe>51084021204058687000177000000000000126111234567890</chNFSe>
+    <nPedRegEvento>001</nPedRegEvento>
+    <e101101>
+      <xDesc>Cancelamento de NFS-e</xDesc>
+      <cMotivo>1</cMotivo>
+      <xMotivo>Erro no preenchimento dos dados da nota fiscal de servico</xMotivo>
+    </e101101>
+  </infPedReg>
+</pedRegEvento>
+

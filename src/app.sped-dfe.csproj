@@ -18,6 +18,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+    <Content Include="Config\nfe-providers.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -26,10 +30,6 @@
     <ProjectReference Include="..\libs\DFe\CTe.Utils\CTe.Utils.csproj" />
     <ProjectReference Include="..\libs\DFe\CTe.Wsdl\CTe.Wsdl.csproj" />
     <ProjectReference Include="..\libs\DFe\DFe.Utils\DFe.Utils.csproj" />
-    <ProjectReference Include="..\libs\DFe\NFe.Classes\NFe.Classes.csproj" />
-    <ProjectReference Include="..\libs\DFe\NFe.Servicos\NFe.Servicos.csproj" />
-    <ProjectReference Include="..\libs\DFe\NFe.Utils\NFe.Utils.csproj" />
-    <ProjectReference Include="..\libs\OpenAC.Net.NFSe.Nacional\OpenAC.Net.NFSe.Nacional.csproj" />
   </ItemGroup>
 
 </Project>

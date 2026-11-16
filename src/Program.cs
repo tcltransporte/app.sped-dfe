@@ -1,4 +1,5 @@
 using application.services.Logging;
+using application.services.Controllers.DFe.NFe.Providers;
 using application.services.Controllers.DFe.NFSe.Providers;
 using application.services.Controllers.DFe.NFSe.Providers.ISSNET;
 using application.services.Controllers.DFe.NFSe.Providers.Nacional;
@@ -22,6 +23,8 @@ builder.Services.AddControllers(options =>
 });
 
 builder.Services.AddSingleton<ApiErrorFileLogger>();
+builder.Services.AddSingleton<NfeProvidersXmlStore>();
+builder.Services.AddSingleton<SefazNfeProvider>();
 builder.Services.AddSingleton<NfseProvidersXmlStore>();
 builder.Services.AddSingleton<INFSeProvider, IssNetGoianiaProvider>();
 builder.Services.AddSingleton<INFSeProvider, NacionalNfseProvider>();

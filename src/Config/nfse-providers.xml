@@ -34,6 +34,8 @@
     </Provider>
 
     <Provider key="NACIONAL" name="NFS-e Nacional (SEFIN/ADN)" standard="NACIONAL" version="1.01" enabled="true">
+      <NfseNamespace>http://www.sped.fazenda.gov.br/nfse</NfseNamespace>
+      <CancelEventType>e101101</CancelEventType>
       <ProductionEndpoint>https://sefin.nfse.gov.br/SefinNacional/nfse</ProductionEndpoint>
       <HomologationEndpoint>https://sefin.producaorestrita.nfse.gov.br/SefinNacional/nfse</HomologationEndpoint>
       <AdnProductionEndpoint>https://adn.nfse.gov.br/contribuintes</AdnProductionEndpoint>

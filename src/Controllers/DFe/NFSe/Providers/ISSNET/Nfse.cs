@@ -70,7 +70,7 @@ namespace application.services.Controllers.DFe.NFSe.Providers.ISSNET
 
             var isDpsPayload = xml.SelectSingleNode("//*[local-name()='infDPS']") != null;
             var gerarNfseEnvio = isDpsPayload
-                ? PrepareDpsGerarNfseEnvio(xml, certificate, nfseNamespace)
+                ? PrepareDpsGerarNfseEnvio(xml, certificate, nfseNamespace, version)
                 : PrepareGerarNfseEnvio(xml, certificate, nfseNamespace);
 
             var soapEnvelope = CreateSoapEnvelope(gerarNfseEnvio.OuterXml, nfseNamespace, soapNamespace, version, "GerarNfse");
@@ -247,40 +247,358 @@ namespace application.services.Controllers.DFe.NFSe.Providers.ISSNET
             return string.IsNullOrWhiteSpace(value) ? null : value;
         }
 
-        private static XmlElement PrepareDpsGerarNfseEnvio(XmlDocument source, X509Certificate2 certificate, string nfseNamespace)
+        private static XmlElement PrepareDpsGerarNfseEnvio(XmlDocument source, X509Certificate2 certificate, string nfseNamespace, string version = "1.01")
         {
+            XNamespace ns = nfseNamespace;
+            var xDoc = XDocument.Parse(source.OuterXml, LoadOptions.PreserveWhitespace);
+
+            var infDpsOriginal = xDoc.Descendants().FirstOrDefault(e => e.Name.LocalName == "infDPS")
+                ?? throw new InvalidOperationException("Tag infDPS não encontrada no XML de emissão.");
+
+            var dpsOriginal = infDpsOriginal.Parent?.Name.LocalName == "DPS" ? infDpsOriginal.Parent : null;
+            var hasSignature = dpsOriginal?.Elements().Any(e => e.Name.LocalName == "Signature") == true;
+
+            var infDps = hasSignature
+                ? new XElement(infDpsOriginal)
+                : MapInfDpsForIssNet(infDpsOriginal, ns);
+
+            EnsureDpsId(infDps);
+            ApplyNamespaceRecursive(infDps, ns);
+
+            var dps = new XElement(ns + "DPS", new XAttribute("versao", version), infDps);
+            if (hasSignature &&
+                string.Equals(xDoc.Root?.Name.LocalName, "GerarNfseEnvio", StringComparison.OrdinalIgnoreCase) &&
+                dpsOriginal?.Elements().FirstOrDefault(e => e.Name.LocalName == "Signature") is XElement sigEl)
+            {
+                dps.Add(new XElement(sigEl));
+            }
+
+            var gerarEnvio = new XElement(ns + "GerarNfseEnvio", dps);
+
             var doc = new XmlDocument { PreserveWhitespace = true };
-            var sourceRoot = source.DocumentElement!;
-
-            if (sourceRoot.LocalName == "GerarNfseEnvio")
-            {
-                doc.LoadXml(source.OuterXml);
-                EnsureNamespace(doc.DocumentElement!, nfseNamespace);
-            }
-            else if (sourceRoot.LocalName == "DPS")
-            {
-                var gerar = doc.CreateElement("GerarNfseEnvio", nfseNamespace);
-                doc.AppendChild(gerar);
-                gerar.AppendChild(doc.ImportNode(sourceRoot, true));
-            }
-            else
-            {
-                var gerar = doc.CreateElement("GerarNfseEnvio", nfseNamespace);
-                doc.AppendChild(gerar);
-                var dps = doc.CreateElement("DPS", nfseNamespace);
-                dps.SetAttribute("versao", "1.01");
-                gerar.AppendChild(dps);
-                dps.AppendChild(doc.ImportNode(sourceRoot, true));
-            }
-
-            if (doc.SelectSingleNode("//*[local-name()='DPS']") is XmlElement dpsEl &&
-                string.IsNullOrWhiteSpace(dpsEl.GetAttribute("versao")))
-            {
-                dpsEl.SetAttribute("versao", "1.01");
-            }
+            doc.LoadXml(gerarEnvio.ToString(SaveOptions.DisableFormatting));
 
             SignDpsIfNeeded(doc, certificate);
             return doc.DocumentElement!;
+        }
+
+        private static XElement MapInfDpsForIssNet(XElement src, XNamespace ns)
+        {
+            var infDps = new XElement(ns + "infDPS");
+            if (src.Attribute("Id") is XAttribute idAttr && !string.IsNullOrWhiteSpace(idAttr.Value))
+                infDps.SetAttributeValue("Id", idAttr.Value.Trim());
+
+            var tpEmit = ChildValue(src, "tpEmit") ?? "1";
+
+            AddSimpleIfPresent(infDps, src, ns, "tpAmb");
+            AddSimpleIfPresent(infDps, src, ns, "dhEmi");
+            AddSimpleIfPresent(infDps, src, ns, "verAplic");
+            AddSimpleIfPresent(infDps, src, ns, "serie");
+            AddSimpleIfPresent(infDps, src, ns, "nDPS");
+            AddSimpleIfPresent(infDps, src, ns, "dCompet");
+            AddSimpleIfPresent(infDps, src, ns, "tpEmit");
+            AddSimpleIfPresent(infDps, src, ns, "cLocEmi");
+            CloneChildIfPresent(infDps, src, ns, "subst");
+
+            if (ChildElement(src, "prest") is XElement prestSrc)
+            {
+                var prest = new XElement(ns + "prest");
+                AddSimpleIfPresent(prest, prestSrc, ns, "CNPJ");
+                AddSimpleIfPresent(prest, prestSrc, ns, "CPF");
+                AddSimpleIfPresent(prest, prestSrc, ns, "NIF");
+                AddSimpleIfPresent(prest, prestSrc, ns, "cNaoNIF");
+                AddSimpleIfPresent(prest, prestSrc, ns, "CAEPF");
+                AddSimpleIfPresent(prest, prestSrc, ns, "IM");
+                if (tpEmit != "1")
+                {
+                    AddSimpleIfPresent(prest, prestSrc, ns, "xNome");
+                    CloneChildIfPresent(prest, prestSrc, ns, "end");
+                }
+                AddSimpleIfPresent(prest, prestSrc, ns, "fone");
+                AddSimpleIfPresent(prest, prestSrc, ns, "email");
+
+                if (ChildElement(prestSrc, "regTrib") is XElement regTribSrc)
+                {
+                    var regTrib = new XElement(ns + "regTrib");
+                    AddSimpleIfPresent(regTrib, regTribSrc, ns, "opSimpNac");
+                    AddSimpleIfPresent(regTrib, regTribSrc, ns, "regApTribSN");
+                    AddSimpleIfPresent(regTrib, regTribSrc, ns, "regEspTrib");
+                    prest.Add(regTrib);
+                }
+
+                infDps.Add(prest);
+            }
+
+            if (ChildElement(src, "toma") is XElement tomaSrc)
+            {
+                var toma = new XElement(ns + "toma");
+                AddSimpleIfPresent(toma, tomaSrc, ns, "CNPJ");
+                AddSimpleIfPresent(toma, tomaSrc, ns, "CPF");
+                AddSimpleIfPresent(toma, tomaSrc, ns, "NIF");
+                AddSimpleIfPresent(toma, tomaSrc, ns, "cNaoNIF");
+                AddSimpleIfPresent(toma, tomaSrc, ns, "CAEPF");
+                AddSimpleIfPresent(toma, tomaSrc, ns, "IM");
+                AddSimpleIfPresent(toma, tomaSrc, ns, "xNome");
+
+                if (ChildElement(tomaSrc, "end") is XElement endSrc)
+                {
+                    var end = new XElement(ns + "end");
+                    if (ChildElement(endSrc, "endNac") is XElement endNacSrc)
+                    {
+                        var endNac = new XElement(ns + "endNac");
+                        AddSimpleIfPresent(endNac, endNacSrc, ns, "cMun");
+                        AddSimpleIfPresent(endNac, endNacSrc, ns, "CEP");
+                        end.Add(endNac);
+                    }
+                    CloneChildIfPresent(end, endSrc, ns, "endExt");
+                    AddSimpleIfPresent(end, endSrc, ns, "xLgr");
+                    AddSimpleIfPresent(end, endSrc, ns, "nro");
+                    AddSimpleIfPresent(end, endSrc, ns, "xCpl");
+                    AddSimpleIfPresent(end, endSrc, ns, "xBairro");
+                    toma.Add(end);
+                }
+
+                AddSimpleIfPresent(toma, tomaSrc, ns, "fone");
+                AddSimpleIfPresent(toma, tomaSrc, ns, "email");
+                infDps.Add(toma);
+            }
+
+            CloneChildIfPresent(infDps, src, ns, "interm");
+
+            if (ChildElement(src, "serv") is XElement servSrc)
+            {
+                var serv = new XElement(ns + "serv");
+                if (ChildElement(servSrc, "locPrest") is XElement locPrestSrc)
+                {
+                    var locPrest = new XElement(ns + "locPrest");
+                    AddSimpleIfPresent(locPrest, locPrestSrc, ns, "cLocPrestacao");
+                    AddSimpleIfPresent(locPrest, locPrestSrc, ns, "cPaisPrestacao");
+                    serv.Add(locPrest);
+                }
+
+                if (ChildElement(servSrc, "cServ") is XElement cServSrc)
+                {
+                    var cServ = new XElement(ns + "cServ");
+                    AddSimpleIfPresent(cServ, cServSrc, ns, "cTribNac");
+                    AddSimpleIfPresent(cServ, cServSrc, ns, "cTribMun");
+                    AddSimpleIfPresent(cServ, cServSrc, ns, "xDescServ");
+                    AddSimpleIfPresent(cServ, cServSrc, ns, "cNBS");
+                    AddSimpleIfPresent(cServ, cServSrc, ns, "cIntContrib");
+                    serv.Add(cServ);
+                }
+
+                CloneChildIfPresent(serv, servSrc, ns, "comExt");
+                CloneChildIfPresent(serv, servSrc, ns, "lsadppu");
+                CloneChildIfPresent(serv, servSrc, ns, "obra");
+                CloneChildIfPresent(serv, servSrc, ns, "atvEvento");
+                CloneChildIfPresent(serv, servSrc, ns, "explRod");
+                CloneChildIfPresent(serv, servSrc, ns, "infoCompl");
+                infDps.Add(serv);
+            }
+
+            if (ChildElement(src, "valores") is XElement valoresSrc)
+            {
+                var valores = new XElement(ns + "valores");
+                if (ChildElement(valoresSrc, "vServPrest") is XElement vServPrestSrc)
+                {
+                    var vServPrest = new XElement(ns + "vServPrest");
+                    AddSimpleIfPresent(vServPrest, vServPrestSrc, ns, "vReceb");
+                    AddSimpleIfPresent(vServPrest, vServPrestSrc, ns, "vServ");
+                    valores.Add(vServPrest);
+                }
+
+                if (ChildElement(valoresSrc, "vDescCondIncond") is XElement vDescSrc)
+                {
+                    var vDesc = new XElement(ns + "vDescCondIncond");
+                    AddSimpleIfPresent(vDesc, vDescSrc, ns, "vDescIncond");
+                    AddSimpleIfPresent(vDesc, vDescSrc, ns, "vDescCond");
+                    if (vDesc.HasElements)
+                        valores.Add(vDesc);
+                }
+
+                CloneChildIfPresent(valores, valoresSrc, ns, "vDedRed");
+
+                if (ChildElement(valoresSrc, "trib") is XElement tribSrc)
+                {
+                    var trib = new XElement(ns + "trib");
+
+                    if (ChildElement(tribSrc, "tribMun") is XElement tribMunSrc)
+                    {
+                        var tribMun = new XElement(ns + "tribMun");
+                        AddSimpleIfPresent(tribMun, tribMunSrc, ns, "tribISSQN");
+                        AddSimpleIfPresent(tribMun, tribMunSrc, ns, "cPaisResult");
+                        CloneChildIfPresent(tribMun, tribMunSrc, ns, "BM");
+                        CloneChildIfPresent(tribMun, tribMunSrc, ns, "exigSusp");
+                        AddSimpleIfPresent(tribMun, tribMunSrc, ns, "tpImunidade");
+                        AddSimpleIfPresent(tribMun, tribMunSrc, ns, "tpRetISSQN");
+                        AddSimpleIfPresent(tribMun, tribMunSrc, ns, "pAliq");
+                        trib.Add(tribMun);
+                    }
+
+                    if (ChildElement(tribSrc, "tribFed") is XElement tribFedSrc)
+                    {
+                        var tribFed = new XElement(ns + "tribFed");
+                        if (ChildElement(tribFedSrc, "piscofins") is XElement piscofinsSrc)
+                        {
+                            var piscofins = new XElement(ns + "piscofins");
+                            AddSimpleIfPresent(piscofins, piscofinsSrc, ns, "CST");
+                            AddSimpleIfPresent(piscofins, piscofinsSrc, ns, "vBCPisCofins");
+                            AddSimpleIfPresent(piscofins, piscofinsSrc, ns, "pAliqPis");
+                            AddSimpleIfPresent(piscofins, piscofinsSrc, ns, "pAliqCofins");
+                            AddSimpleIfPresent(piscofins, piscofinsSrc, ns, "vPis");
+                            AddSimpleIfPresent(piscofins, piscofinsSrc, ns, "vCofins");
+                            AddSimpleIfPresent(piscofins, piscofinsSrc, ns, "tpRetPisCofins");
+                            if (piscofins.HasElements)
+                                tribFed.Add(piscofins);
+                        }
+                        AddSimpleIfPresent(tribFed, tribFedSrc, ns, "vRetCP");
+                        AddSimpleIfPresent(tribFed, tribFedSrc, ns, "vRetIRRF");
+                        AddSimpleIfPresent(tribFed, tribFedSrc, ns, "vRetCSLL");
+                        if (tribFed.HasElements)
+                            trib.Add(tribFed);
+                    }
+
+                    if (ChildElement(tribSrc, "totTrib") is XElement totTribSrc)
+                    {
+                        var totTrib = new XElement(ns + "totTrib");
+                        if (ChildElement(totTribSrc, "vTotTrib") is XElement vTotTribSrc)
+                        {
+                            var vTotTrib = new XElement(ns + "vTotTrib");
+                            AddSimpleIfPresent(vTotTrib, vTotTribSrc, ns, "vTotTribFed");
+                            AddSimpleIfPresent(vTotTrib, vTotTribSrc, ns, "vTotTribEst");
+                            AddSimpleIfPresent(vTotTrib, vTotTribSrc, ns, "vTotTribMun");
+                            totTrib.Add(vTotTrib);
+                        }
+                        else if (ChildElement(totTribSrc, "pTotTrib") is XElement pTotTribSrc)
+                        {
+                            var pTotTrib = new XElement(ns + "pTotTrib");
+                            AddSimpleIfPresent(pTotTrib, pTotTribSrc, ns, "pTotTribFed");
+                            AddSimpleIfPresent(pTotTrib, pTotTribSrc, ns, "pTotTribEst");
+                            AddSimpleIfPresent(pTotTrib, pTotTribSrc, ns, "pTotTribMun");
+                            totTrib.Add(pTotTrib);
+                        }
+                        else
+                        {
+                            AddSimpleIfPresent(totTrib, totTribSrc, ns, "indTotTrib");
+                            AddSimpleIfPresent(totTrib, totTribSrc, ns, "pTotTribSN");
+                        }
+                        if (totTrib.HasElements)
+                            trib.Add(totTrib);
+                    }
+
+                    valores.Add(trib);
+                }
+
+                infDps.Add(valores);
+            }
+
+            if (ChildElement(src, "IBSCBS") is XElement ibsCbsSrc)
+            {
+                var ibsCbs = new XElement(ns + "IBSCBS");
+                AddSimpleIfPresent(ibsCbs, ibsCbsSrc, ns, "finNFSe");
+                AddSimpleIfPresent(ibsCbs, ibsCbsSrc, ns, "indFinal");
+                AddSimpleIfPresent(ibsCbs, ibsCbsSrc, ns, "cIndOp");
+                AddSimpleIfPresent(ibsCbs, ibsCbsSrc, ns, "tpOper");
+                CloneChildIfPresent(ibsCbs, ibsCbsSrc, ns, "gRefNFSe");
+                AddSimpleIfPresent(ibsCbs, ibsCbsSrc, ns, "tpEnteGov");
+                AddSimpleIfPresent(ibsCbs, ibsCbsSrc, ns, "indDest");
+                CloneChildIfPresent(ibsCbs, ibsCbsSrc, ns, "dest");
+                CloneChildIfPresent(ibsCbs, ibsCbsSrc, ns, "imovel");
+
+                if (ChildElement(ibsCbsSrc, "valores") is XElement ibsValoresSrc)
+                {
+                    var ibsValores = new XElement(ns + "valores");
+                    CloneChildIfPresent(ibsValores, ibsValoresSrc, ns, "gReeRepRes");
+                    if (ChildElement(ibsValoresSrc, "trib") is XElement ibsTribSrc)
+                    {
+                        var ibsTrib = new XElement(ns + "trib");
+                        if (ChildElement(ibsTribSrc, "gIBSCBS") is XElement gIbsCbsSrc)
+                        {
+                            var gIbsCbs = new XElement(ns + "gIBSCBS");
+                            AddSimpleIfPresent(gIbsCbs, gIbsCbsSrc, ns, "CST");
+                            AddSimpleIfPresent(gIbsCbs, gIbsCbsSrc, ns, "cClassTrib");
+                            AddSimpleIfPresent(gIbsCbs, gIbsCbsSrc, ns, "cCredPres");
+                            CloneChildIfPresent(gIbsCbs, gIbsCbsSrc, ns, "gTribRegular");
+                            CloneChildIfPresent(gIbsCbs, gIbsCbsSrc, ns, "gDif");
+                            ibsTrib.Add(gIbsCbs);
+                        }
+                        ibsValores.Add(ibsTrib);
+                    }
+                    ibsCbs.Add(ibsValores);
+                }
+
+                infDps.Add(ibsCbs);
+            }
+
+            return infDps;
+        }
+
+        private static XElement? ChildElement(XElement parent, string localName)
+        {
+            return parent.Elements().FirstOrDefault(e => string.Equals(e.Name.LocalName, localName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private static string? ChildValue(XElement parent, string localName)
+        {
+            var value = ChildElement(parent, localName)?.Value;
+            return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+        }
+
+        private static void AddSimpleIfPresent(XElement target, XElement source, XNamespace ns, string localName)
+        {
+            var value = ChildValue(source, localName);
+            if (!string.IsNullOrWhiteSpace(value))
+                target.Add(new XElement(ns + localName, value));
+        }
+
+        private static void CloneChildIfPresent(XElement target, XElement source, XNamespace ns, string localName)
+        {
+            if (ChildElement(source, localName) is XElement child)
+            {
+                var copy = new XElement(child);
+                ApplyNamespaceRecursive(copy, ns);
+                target.Add(copy);
+            }
+        }
+
+        private static void EnsureDpsId(XElement infDps)
+        {
+            var currentId = (string?)infDps.Attribute("Id");
+            if (!string.IsNullOrWhiteSpace(currentId) &&
+                currentId.Trim().Length == 45 &&
+                currentId.Trim().StartsWith("DPS", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            var cLocEmi = DigitsOnly(infDps.Elements().FirstOrDefault(e => e.Name.LocalName == "cLocEmi")?.Value);
+            var prest = infDps.Elements().FirstOrDefault(e => e.Name.LocalName == "prest");
+            var cnpj = DigitsOnly(prest?.Elements().FirstOrDefault(e => e.Name.LocalName == "CNPJ")?.Value);
+            var cpf = DigitsOnly(prest?.Elements().FirstOrDefault(e => e.Name.LocalName == "CPF")?.Value);
+            var serie = DigitsOnly(infDps.Elements().FirstOrDefault(e => e.Name.LocalName == "serie")?.Value);
+            var nDps = DigitsOnly(infDps.Elements().FirstOrDefault(e => e.Name.LocalName == "nDPS")?.Value);
+
+            var tpInsc = !string.IsNullOrWhiteSpace(cnpj) ? "2" : (!string.IsNullOrWhiteSpace(cpf) ? "1" : string.Empty);
+            var inscFed = !string.IsNullOrWhiteSpace(cnpj) ? cnpj : cpf;
+
+            if (cLocEmi.Length == 7 && !string.IsNullOrWhiteSpace(tpInsc) && !string.IsNullOrWhiteSpace(inscFed) && !string.IsNullOrWhiteSpace(nDps))
+            {
+                var seriePadded = (string.IsNullOrWhiteSpace(serie) ? "1" : serie).PadLeft(5, '0');
+                if (seriePadded.Length > 5) seriePadded = seriePadded[^5..];
+
+                var nDpsPadded = nDps.PadLeft(15, '0');
+                if (nDpsPadded.Length > 15) nDpsPadded = nDpsPadded[^15..];
+
+                var inscPadded = inscFed.PadLeft(14, '0');
+                if (inscPadded.Length > 14) inscPadded = inscPadded[^14..];
+
+                infDps.SetAttributeValue("Id", $"DPS{cLocEmi}{tpInsc}{inscPadded}{seriePadded}{nDpsPadded}");
+            }
+        }
+
+        private static string DigitsOnly(string? value)
+        {
+            return new string((value ?? string.Empty).Where(char.IsDigit).ToArray());
         }
 
         private static void SignDpsIfNeeded(XmlDocument doc, X509Certificate2 certificate)

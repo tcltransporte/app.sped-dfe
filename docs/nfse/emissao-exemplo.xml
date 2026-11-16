@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DPS xmlns="http://www.sped.fazenda.gov.br/nfse" versao="1.01">
+  <!--
+    Modelo completo do XML comum de Emissão de NFS-e (aceito por todos os providers: ISSNET, NACIONAL, etc.).
+    - O atributo Id de <infDPS> é opcional no envio: caso não seja informado, o provider gera automaticamente
+      no padrão DPS + cLocEmi(7) + tpInsc(1) + CNPJ/CPF(14) + serie(5) + nDPS(15).
+    - O provider é resolvido automaticamente pelo código IBGE em <cLocEmi> (ou <cLocPrestacao>):
+      * 5208707 (Goiânia - GO)       -> Provider ISSNET
+      * 5108402 (Várzea Grande - MT) -> Provider NACIONAL (SEFIN/ADN)
+    - O ambiente é definido pela tag <tpAmb> (1 = Produção, 2 = Homologação).
+  -->
+  <infDPS Id="DPS520870720405868700017770002000000000000711">
+    <tpAmb>1</tpAmb>
+    <dhEmi>2026-11-07T12:27:20-03:00</dhEmi>
+    <verAplic>EMISSOR v7.10.4.0</verAplic>
+    <serie>70002</serie>
+    <nDPS>711</nDPS>
+    <dCompet>2026-11-07</dCompet>
+    <tpEmit>1</tpEmit>
+    <cLocEmi>5208707</cLocEmi>
+    <prest>
+      <CNPJ>04058687000177</CNPJ>
+      <IM>1725130</IM>
+      <fone>6232055448</fone>
+      <email>contato@tcltransporte.com.br</email>
+      <regTrib>
+        <opSimpNac>1</opSimpNac>
+        <regEspTrib>0</regEspTrib>
+      </regTrib>
+    </prest>
+    <toma>
+      <CNPJ>12285276000142</CNPJ>
+      <IM>0000000</IM>
+      <xNome>Sococo SA Industrias Alimenticias</xNome>
+      <end>
+        <endNac>
+          <cMun>2704302</cMun>
+          <CEP>57037532</CEP>
+        </endNac>
+        <xLgr>Avenida Comendador Gustavo Paiva</xLgr>
+        <nro>0</nro>
+        <xCpl>Quadra A Lote 09</xCpl>
+        <xBairro>Mangabeiras</xBairro>
+      </end>
+      <fone>6232055448</fone>
+      <email>contato@tomador.com.br</email>
+    </toma>
+    <serv>
+      <locPrest>
+        <cLocPrestacao>5208707</cLocPrestacao>
+      </locPrest>
+      <cServ>
+        <cTribNac>160201</cTribNac>
+        <cTribMun>1602</cTribMun>
+        <xDescServ>SERVICO TRANSPORTES RODOVIARIO DE CARGAS MUNICIPAIS
+Romaneio: 39804 / NF: 762636, 762638, 762639
+Frete composto por: Frete: R$536,38 / Gris: R$23,70 / ADV: R$18,96 / ISS: R$30,48</xDescServ>
+        <cNBS>105011900</cNBS>
+      </cServ>
+    </serv>
+    <valores>
+      <vServPrest>
+        <vServ>609.51</vServ>
+      </vServPrest>
+      <vDescCondIncond>
+        <vDescIncond>0.00</vDescIncond>
+        <vDescCond>0.00</vDescCond>
+      </vDescCondIncond>
+      <trib>
+        <tribMun>
+          <tribISSQN>1</tribISSQN>
+          <tpRetISSQN>1</tpRetISSQN>
+          <pAliq>5.00</pAliq>
+        </tribMun>
+        <tribFed>
+          <piscofins>
+            <CST>50</CST>
+            <vBCPisCofins>0.00</vBCPisCofins>
+            <pAliqPis>0.00</pAliqPis>
+            <pAliqCofins>0.00</pAliqCofins>
+            <vPis>0.00</vPis>
+            <vCofins>0.00</vCofins>
+            <tpRetPisCofins>0</tpRetPisCofins>
+          </piscofins>
+          <vRetCP>0.00</vRetCP>
+          <vRetIRRF>0.00</vRetIRRF>
+          <vRetCSLL>0.00</vRetCSLL>
+        </tribFed>
+        <totTrib>
+          <pTotTrib>
+            <pTotTribFed>0.00</pTotTribFed>
+            <pTotTribEst>0.00</pTotTribEst>
+            <pTotTribMun>0.00</pTotTribMun>
+          </pTotTrib>
+        </totTrib>
+      </trib>
+    </valores>
+    <IBSCBS>
+      <finNFSe>0</finNFSe>
+      <cIndOp>070101</cIndOp>
+      <indDest>0</indDest>
+      <valores>
+        <trib>
+          <gIBSCBS>
+            <CST>000</CST>
+            <cClassTrib>000001</cClassTrib>
+          </gIBSCBS>
+        </trib>
+      </valores>
+    </IBSCBS>
+  </infDPS>
+</DPS>
+

@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NfeProvidersConfig>
+  <!-- Autorizador padrão quando a UF não estiver mapeada especificamente -->
+  <DefaultProvider>SVRS</DefaultProvider>
+
+  <!-- Ambiente Nacional (AN - cOrgao 91) para Distribuição DF-e e Manifestação do Destinatário -->
+  <NationalEnvironment>
+    <DistribuicaoDFeProduction>https://www1.nfe.fazenda.gov.br/NFeDistribuicaoDFe/NFeDistribuicaoDFe.asmx</DistribuicaoDFeProduction>
+    <DistribuicaoDFeHomologation>https://hom1.nfe.fazenda.gov.br/NFeDistribuicaoDFe/NFeDistribuicaoDFe.asmx</DistribuicaoDFeHomologation>
+    <RecepcaoEventoProduction>https://www.nfe.fazenda.gov.br/NFeRecepcaoEvento4/NFeRecepcaoEvento4.asmx</RecepcaoEventoProduction>
+    <RecepcaoEventoHomologation>https://hom1.nfe.fazenda.gov.br/NFeRecepcaoEvento4/NFeRecepcaoEvento4.asmx</RecepcaoEventoHomologation>
+  </NationalEnvironment>
+
+  <Providers>
+    <!-- SEFAZ Amazonas (AM - 13) -->
+    <Provider key="SEFAZ_AM" name="SEFAZ Amazonas" version="4.00" enabled="true">
+      <Production>
+        <NFeAutorizacao>https://nfe.sefaz.am.gov.br/services2/services/NfeAutorizacao4</NFeAutorizacao>
+        <NFeRetAutorizacao>https://nfe.sefaz.am.gov.br/services2/services/NfeRetAutorizacao4</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://nfe.sefaz.am.gov.br/services2/services/RecepcaoEvento4</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://nfe.sefaz.am.gov.br/services2/services/NfeConsulta4</NFeConsultaProtocolo>
+        <NFeStatusServico>https://nfe.sefaz.am.gov.br/services2/services/NfeStatusServico4</NFeStatusServico>
+        <NFeInutilizacao>https://nfe.sefaz.am.gov.br/services2/services/NfeInutilizacao4</NFeInutilizacao>
+      </Production>
+      <Homologation>
+        <NFeAutorizacao>https://homnfe.sefaz.am.gov.br/services2/services/NfeAutorizacao4</NFeAutorizacao>
+        <NFeRetAutorizacao>https://homnfe.sefaz.am.gov.br/services2/services/NfeRetAutorizacao4</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://homnfe.sefaz.am.gov.br/services2/services/RecepcaoEvento4</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://homnfe.sefaz.am.gov.br/services2/services/NfeConsulta4</NFeConsultaProtocolo>
+        <NFeStatusServico>https://homnfe.sefaz.am.gov.br/services2/services/NfeStatusServico4</NFeStatusServico>
+        <NFeInutilizacao>https://homnfe.sefaz.am.gov.br/services2/services/NfeInutilizacao4</NFeInutilizacao>
+      </Homologation>
+      <States>
+        <State cUF="13" uf="AM" name="Amazonas" enabled="true" />
+      </States>
+    </Provider>
+
+    <!-- SEFAZ Bahia (BA - 29) -->
+    <Provider key="SEFAZ_BA" name="SEFAZ Bahia" version="4.00" enabled="true">
+      <Production>
+        <NFeAutorizacao>https://nfe.sefaz.ba.gov.br/webservices/NFeAutorizacao4/NFeAutorizacao4.asmx</NFeAutorizacao>
+        <NFeRetAutorizacao>https://nfe.sefaz.ba.gov.br/webservices/NFeRetAutorizacao4/NFeRetAutorizacao4.asmx</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://nfe.sefaz.ba.gov.br/webservices/NFeRecepcaoEvento4/NFeRecepcaoEvento4.asmx</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://nfe.sefaz.ba.gov.br/webservices/NFeConsultaProtocolo4/NFeConsultaProtocolo4.asmx</NFeConsultaProtocolo>
+        <NFeStatusServico>https://nfe.sefaz.ba.gov.br/webservices/NFeStatusServico4/NFeStatusServico4.asmx</NFeStatusServico>
+        <NFeInutilizacao>https://nfe.sefaz.ba.gov.br/webservices/NFeInutilizacao4/NFeInutilizacao4.asmx</NFeInutilizacao>
+      </Production>
+      <Homologation>
+        <NFeAutorizacao>https://hnfe.sefaz.ba.gov.br/webservices/NFeAutorizacao4/NFeAutorizacao4.asmx</NFeAutorizacao>
+        <NFeRetAutorizacao>https://hnfe.sefaz.ba.gov.br/webservices/NFeRetAutorizacao4/NFeRetAutorizacao4.asmx</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://hnfe.sefaz.ba.gov.br/webservices/NFeRecepcaoEvento4/NFeRecepcaoEvento4.asmx</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://hnfe.sefaz.ba.gov.br/webservices/NFeConsultaProtocolo4/NFeConsultaProtocolo4.asmx</NFeConsultaProtocolo>
+        <NFeStatusServico>https://hnfe.sefaz.ba.gov.br/webservices/NFeStatusServico4/NFeStatusServico4.asmx</NFeStatusServico>
+        <NFeInutilizacao>https://hnfe.sefaz.ba.gov.br/webservices/NFeInutilizacao4/NFeInutilizacao4.asmx</NFeInutilizacao>
+      </Homologation>
+      <States>
+        <State cUF="29" uf="BA" name="Bahia" enabled="true" />
+      </States>
+    </Provider>
+
+    <!-- SEFAZ Ceará (CE - 23) -->
+    <Provider key="SEFAZ_CE" name="SEFAZ Ceará" version="4.00" enabled="true">
+      <Production>
+        <NFeAutorizacao>https://nfe.sefaz.ce.gov.br/nfe4/services/NFeAutorizacao4?wsdl</NFeAutorizacao>
+        <NFeRetAutorizacao>https://nfe.sefaz.ce.gov.br/nfe4/services/NFeRetAutorizacao4?wsdl</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://nfe.sefaz.ce.gov.br/nfe4/services/NFeRecepcaoEvento4?wsdl</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://nfe.sefaz.ce.gov.br/nfe4/services/NFeConsultaProtocolo4?wsdl</NFeConsultaProtocolo>
+        <NFeStatusServico>https://nfe.sefaz.ce.gov.br/nfe4/services/NFeStatusServico4?wsdl</NFeStatusServico>
+        <NFeInutilizacao>https://nfe.sefaz.ce.gov.br/nfe4/services/NFeInutilizacao4?wsdl</NFeInutilizacao>
+      </Production>
+      <Homologation>
+        <NFeAutorizacao>https://nfeh.sefaz.ce.gov.br/nfe4/services/NFeAutorizacao4?wsdl</NFeAutorizacao>
+        <NFeRetAutorizacao>https://nfeh.sefaz.ce.gov.br/nfe4/services/NFeRetAutorizacao4?wsdl</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://nfeh.sefaz.ce.gov.br/nfe4/services/NFeRecepcaoEvento4?wsdl</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://nfeh.sefaz.ce.gov.br/nfe4/services/NFeConsultaProtocolo4?wsdl</NFeConsultaProtocolo>
+        <NFeStatusServico>https://nfeh.sefaz.ce.gov.br/nfe4/services/NFeStatusServico4?wsdl</NFeStatusServico>
+        <NFeInutilizacao>https://nfeh.sefaz.ce.gov.br/nfe4/services/NFeInutilizacao4?wsdl</NFeInutilizacao>
+      </Homologation>
+      <States>
+        <State cUF="23" uf="CE" name="Ceará" enabled="true" />
+      </States>
+    </Provider>
+
+    <!-- SEFAZ Goiás (GO - 52) -->
+    <Provider key="SEFAZ_GO" name="SEFAZ Goiás" version="4.00" enabled="true">
+      <Production>
+        <NFeAutorizacao>https://nfe.sefaz.go.gov.br/nfe/services/NFeAutorizacao4?wsdl</NFeAutorizacao>
+        <NFeRetAutorizacao>https://nfe.sefaz.go.gov.br/nfe/services/NFeRetAutorizacao4?wsdl</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://nfe.sefaz.go.gov.br/nfe/services/NFeRecepcaoEvento4?wsdl</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://nfe.sefaz.go.gov.br/nfe/services/NFeConsultaProtocolo4?wsdl</NFeConsultaProtocolo>
+        <NFeStatusServico>https://nfe.sefaz.go.gov.br/nfe/services/NFeStatusServico4?wsdl</NFeStatusServico>
+        <NFeInutilizacao>https://nfe.sefaz.go.gov.br/nfe/services/NFeInutilizacao4?wsdl</NFeInutilizacao>
+      </Production>
+      <Homologation>
+        <NFeAutorizacao>https://homolog.sefaz.go.gov.br/nfe/services/NFeAutorizacao4?wsdl</NFeAutorizacao>
+        <NFeRetAutorizacao>https://homolog.sefaz.go.gov.br/nfe/services/NFeRetAutorizacao4?wsdl</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://homolog.sefaz.go.gov.br/nfe/services/NFeRecepcaoEvento4?wsdl</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://homolog.sefaz.go.gov.br/nfe/services/NFeConsultaProtocolo4?wsdl</NFeConsultaProtocolo>
+        <NFeStatusServico>https://homolog.sefaz.go.gov.br/nfe/services/NFeStatusServico4?wsdl</NFeStatusServico>
+        <NFeInutilizacao>https://homolog.sefaz.go.gov.br/nfe/services/NFeInutilizacao4?wsdl</NFeInutilizacao>
+      </Homologation>
+      <States>
+        <State cUF="52" uf="GO" name="Goiás" enabled="true" />
+      </States>
+    </Provider>
+
+    <!-- SEFAZ Minas Gerais (MG - 31) -->
+    <Provider key="SEFAZ_MG" name="SEFAZ Minas Gerais" version="4.00" enabled="true">
+      <Production>
+        <NFeAutorizacao>https://nfe.fazenda.mg.gov.br/nfe2/services/NFeAutorizacao4</NFeAutorizacao>
+        <NFeRetAutorizacao>https://nfe.fazenda.mg.gov.br/nfe2/services/NFeRetAutorizacao4</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://nfe.fazenda.mg.gov.br/nfe2/services/NFeRecepcaoEvento4</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://nfe.fazenda.mg.gov.br/nfe2/services/NFeConsultaProtocolo4</NFeConsultaProtocolo>
+        <NFeStatusServico>https://nfe.fazenda.mg.gov.br/nfe2/services/NFeStatusServico4</NFeStatusServico>
+        <NFeInutilizacao>https://nfe.fazenda.mg.gov.br/nfe2/services/NFeInutilizacao4</NFeInutilizacao>
+      </Production>
+      <Homologation>
+        <NFeAutorizacao>https://hnfe.fazenda.mg.gov.br/nfe2/services/NFeAutorizacao4</NFeAutorizacao>
+        <NFeRetAutorizacao>https://hnfe.fazenda.mg.gov.br/nfe2/services/NFeRetAutorizacao4</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://hnfe.fazenda.mg.gov.br/nfe2/services/NFeRecepcaoEvento4</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://hnfe.fazenda.mg.gov.br/nfe2/services/NFeConsultaProtocolo4</NFeConsultaProtocolo>
+        <NFeStatusServico>https://hnfe.fazenda.mg.gov.br/nfe2/services/NFeStatusServico4</NFeStatusServico>
+        <NFeInutilizacao>https://hnfe.fazenda.mg.gov.br/nfe2/services/NFeInutilizacao4</NFeInutilizacao>
+      </Homologation>
+      <States>
+        <State cUF="31" uf="MG" name="Minas Gerais" enabled="true" />
+      </States>
+    </Provider>
+
+    <!-- SEFAZ Mato Grosso do Sul (MS - 50) -->
+    <Provider key="SEFAZ_MS" name="SEFAZ Mato Grosso do Sul" version="4.00" enabled="true">
+      <Production>
+        <NFeAutorizacao>https://nfe.sefaz.ms.gov.br/ws/NFeAutorizacao4</NFeAutorizacao>
+        <NFeRetAutorizacao>https://nfe.sefaz.ms.gov.br/ws/NFeRetAutorizacao4</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://nfe.sefaz.ms.gov.br/ws/NFeRecepcaoEvento4</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://nfe.sefaz.ms.gov.br/ws/NFeConsultaProtocolo4</NFeConsultaProtocolo>
+        <NFeStatusServico>https://nfe.sefaz.ms.gov.br/ws/NFeStatusServico4</NFeStatusServico>
+        <NFeInutilizacao>https://nfe.sefaz.ms.gov.br/ws/NFeInutilizacao4</NFeInutilizacao>
+      </Production>
+      <Homologation>
+        <NFeAutorizacao>https://hom.nfe.sefaz.ms.gov.br/ws/NFeAutorizacao4</NFeAutorizacao>
+        <NFeRetAutorizacao>https://hom.nfe.sefaz.ms.gov.br/ws/NFeRetAutorizacao4</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://hom.nfe.sefaz.ms.gov.br/ws/NFeRecepcaoEvento4</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://hom.nfe.sefaz.ms.gov.br/ws/NFeConsultaProtocolo4</NFeConsultaProtocolo>
+        <NFeStatusServico>https://hom.nfe.sefaz.ms.gov.br/ws/NFeStatusServico4</NFeStatusServico>
+        <NFeInutilizacao>https://hom.nfe.sefaz.ms.gov.br/ws/NFeInutilizacao4</NFeInutilizacao>
+      </Homologation>
+      <States>
+        <State cUF="50" uf="MS" name="Mato Grosso do Sul" enabled="true" />
+      </States>
+    </Provider>
+
+    <!-- SEFAZ Mato Grosso (MT - 51) -->
+    <Provider key="SEFAZ_MT" name="SEFAZ Mato Grosso" version="4.00" enabled="true">
+      <Production>
+        <NFeAutorizacao>https://nfe.sefaz.mt.gov.br/nfews/v2/services/NfeAutorizacao4?wsdl</NFeAutorizacao>
+        <NFeRetAutorizacao>https://nfe.sefaz.mt.gov.br/nfews/v2/services/NfeRetAutorizacao4?wsdl</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://nfe.sefaz.mt.gov.br/nfews/v2/services/RecepcaoEvento4?wsdl</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://nfe.sefaz.mt.gov.br/nfews/v2/services/NfeConsulta4?wsdl</NFeConsultaProtocolo>
+        <NFeStatusServico>https://nfe.sefaz.mt.gov.br/nfews/v2/services/NfeStatusServico4?wsdl</NFeStatusServico>
+        <NFeInutilizacao>https://nfe.sefaz.mt.gov.br/nfews/v2/services/NfeInutilizacao4?wsdl</NFeInutilizacao>
+      </Production>
+      <Homologation>
+        <NFeAutorizacao>https://homologacao.sefaz.mt.gov.br/nfews/v2/services/NfeAutorizacao4</NFeAutorizacao>
+        <NFeRetAutorizacao>https://homologacao.sefaz.mt.gov.br/nfews/v2/services/NfeRetAutorizacao4</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://homologacao.sefaz.mt.gov.br/nfews/v2/services/RecepcaoEvento4</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://homologacao.sefaz.mt.gov.br/nfews/v2/services/NfeConsulta4</NFeConsultaProtocolo>
+        <NFeStatusServico>https://homologacao.sefaz.mt.gov.br/nfews/v2/services/NfeStatusServico4</NFeStatusServico>
+        <NFeInutilizacao>https://homologacao.sefaz.mt.gov.br/nfews/v2/services/NfeInutilizacao4</NFeInutilizacao>
+      </Homologation>
+      <States>
+        <State cUF="51" uf="MT" name="Mato Grosso" enabled="true" />
+      </States>
+    </Provider>
+
+    <!-- SEFAZ Pernambuco (PE - 26) -->
+    <Provider key="SEFAZ_PE" name="SEFAZ Pernambuco" version="4.00" enabled="true">
+      <Production>
+        <NFeAutorizacao>https://nfe.sefaz.pe.gov.br/nfe-service/services/NFeAutorizacao4</NFeAutorizacao>
+        <NFeRetAutorizacao>https://nfe.sefaz.pe.gov.br/nfe-service/services/NFeRetAutorizacao4</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://nfe.sefaz.pe.gov.br/nfe-service/services/NFeRecepcaoEvento4</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://nfe.sefaz.pe.gov.br/nfe-service/services/NFeConsultaProtocolo4</NFeConsultaProtocolo>
+        <NFeStatusServico>https://nfe.sefaz.pe.gov.br/nfe-service/services/NFeStatusServico4</NFeStatusServico>
+        <NFeInutilizacao>https://nfe.sefaz.pe.gov.br/nfe-service/services/NFeInutilizacao4</NFeInutilizacao>
+      </Production>
+      <Homologation>
+        <NFeAutorizacao>https://nfehomolog.sefaz.pe.gov.br/nfe-service/services/NFeAutorizacao4?wsdl</NFeAutorizacao>
+        <NFeRetAutorizacao>https://nfehomolog.sefaz.pe.gov.br/nfe-service/services/NFeRetAutorizacao4?wsdl</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://nfehomolog.sefaz.pe.gov.br/nfe-service/services/NFeRecepcaoEvento4?wsdl</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://nfehomolog.sefaz.pe.gov.br/nfe-service/services/NFeConsultaProtocolo4?wsdl</NFeConsultaProtocolo>
+        <NFeStatusServico>https://nfehomolog.sefaz.pe.gov.br/nfe-service/services/NFeStatusServico4?wsdl</NFeStatusServico>
+        <NFeInutilizacao>https://nfehomolog.sefaz.pe.gov.br/nfe-service/services/NFeInutilizacao4?wsdl</NFeInutilizacao>
+      </Homologation>
+      <States>
+        <State cUF="26" uf="PE" name="Pernambuco" enabled="true" />
+      </States>
+    </Provider>
+
+    <!-- SEFAZ Paraná (PR - 41) -->
+    <Provider key="SEFAZ_PR" name="SEFAZ Paraná" version="4.00" enabled="true">
+      <Production>
+        <NFeAutorizacao>https://nfe.sefa.pr.gov.br/nfe/NFeAutorizacao4?wsdl</NFeAutorizacao>
+        <NFeRetAutorizacao>https://nfe.sefa.pr.gov.br/nfe/NFeRetAutorizacao4?wsdl</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://nfe.sefa.pr.gov.br/nfe/NFeRecepcaoEvento4?wsdl</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://nfe.sefa.pr.gov.br/nfe/NFeConsultaProtocolo4?wsdl</NFeConsultaProtocolo>
+        <NFeStatusServico>https://nfe.sefa.pr.gov.br/nfe/NFeStatusServico4?wsdl</NFeStatusServico>
+        <NFeInutilizacao>https://nfe.sefa.pr.gov.br/nfe/NFeInutilizacao4?wsdl</NFeInutilizacao>
+      </Production>
+      <Homologation>
+        <NFeAutorizacao>https://homologacao.nfe.sefa.pr.gov.br/nfe/NFeAutorizacao4?wsdl</NFeAutorizacao>
+        <NFeRetAutorizacao>https://homologacao.nfe.sefa.pr.gov.br/nfe/NFeRetAutorizacao4?wsdl</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://homologacao.nfe.sefa.pr.gov.br/nfe/NFeRecepcaoEvento4?wsdl</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://homologacao.nfe.sefa.pr.gov.br/nfe/NFeConsultaProtocolo4?wsdl</NFeConsultaProtocolo>
+        <NFeStatusServico>https://homologacao.nfe.sefa.pr.gov.br/nfe/NFeStatusServico4?wsdl</NFeStatusServico>
+        <NFeInutilizacao>https://homologacao.nfe.sefa.pr.gov.br/nfe/NFeInutilizacao4?wsdl</NFeInutilizacao>
+      </Homologation>
+      <States>
+        <State cUF="41" uf="PR" name="Paraná" enabled="true" />
+      </States>
+    </Provider>
+
+    <!-- SEFAZ Rio Grande do Sul (RS - 43) -->
+    <Provider key="SEFAZ_RS" name="SEFAZ Rio Grande do Sul" version="4.00" enabled="true">
+      <Production>
+        <NFeAutorizacao>https://nfe.sefazrs.rs.gov.br/ws/NfeAutorizacao/NFeAutorizacao4.asmx</NFeAutorizacao>
+        <NFeRetAutorizacao>https://nfe.sefazrs.rs.gov.br/ws/NfeRetAutorizacao/NFeRetAutorizacao4.asmx</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://nfe.sefazrs.rs.gov.br/ws/recepcaoevento/recepcaoevento4.asmx</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://nfe.sefazrs.rs.gov.br/ws/NfeConsulta/NfeConsulta4.asmx</NFeConsultaProtocolo>
+        <NFeStatusServico>https://nfe.sefazrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx</NFeStatusServico>
+        <NFeInutilizacao>https://nfe.sefazrs.rs.gov.br/ws/nfeinutilizacao/nfeinutilizacao4.asmx</NFeInutilizacao>
+      </Production>
+      <Homologation>
+        <NFeAutorizacao>https://nfe-homologacao.sefazrs.rs.gov.br/ws/NfeAutorizacao/NFeAutorizacao4.asmx</NFeAutorizacao>
+        <NFeRetAutorizacao>https://nfe-homologacao.sefazrs.rs.gov.br/ws/NfeRetAutorizacao/NFeRetAutorizacao4.asmx</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://nfe-homologacao.sefazrs.rs.gov.br/ws/recepcaoevento/recepcaoevento4.asmx</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://nfe-homologacao.sefazrs.rs.gov.br/ws/NfeConsulta/NfeConsulta4.asmx</NFeConsultaProtocolo>
+        <NFeStatusServico>https://nfe-homologacao.sefazrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx</NFeStatusServico>
+        <NFeInutilizacao>https://nfe-homologacao.sefazrs.rs.gov.br/ws/nfeinutilizacao/nfeinutilizacao4.asmx</NFeInutilizacao>
+      </Homologation>
+      <States>
+        <State cUF="43" uf="RS" name="Rio Grande do Sul" enabled="true" />
+      </States>
+    </Provider>
+
+    <!-- SEFAZ São Paulo (SP - 35) -->
+    <Provider key="SEFAZ_SP" name="SEFAZ São Paulo" version="4.00" enabled="true">
+      <Production>
+        <NFeAutorizacao>https://nfe.fazenda.sp.gov.br/ws/nfeautorizacao4.asmx</NFeAutorizacao>
+        <NFeRetAutorizacao>https://nfe.fazenda.sp.gov.br/ws/nferetautorizacao4.asmx</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://nfe.fazenda.sp.gov.br/ws/nferecepcaoevento4.asmx</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://nfe.fazenda.sp.gov.br/ws/nfeconsultaprotocolo4.asmx</NFeConsultaProtocolo>
+        <NFeStatusServico>https://nfe.fazenda.sp.gov.br/ws/nfestatusservico4.asmx</NFeStatusServico>
+        <NFeInutilizacao>https://nfe.fazenda.sp.gov.br/ws/nfeinutilizacao4.asmx</NFeInutilizacao>
+      </Production>
+      <Homologation>
+        <NFeAutorizacao>https://homologacao.nfe.fazenda.sp.gov.br/ws/nfeautorizacao4.asmx</NFeAutorizacao>
+        <NFeRetAutorizacao>https://homologacao.nfe.fazenda.sp.gov.br/ws/nferetautorizacao4.asmx</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://homologacao.nfe.fazenda.sp.gov.br/ws/nferecepcaoevento4.asmx</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://homologacao.nfe.fazenda.sp.gov.br/ws/nfeconsultaprotocolo4.asmx</NFeConsultaProtocolo>
+        <NFeStatusServico>https://homologacao.nfe.fazenda.sp.gov.br/ws/nfestatusservico4.asmx</NFeStatusServico>
+        <NFeInutilizacao>https://homologacao.nfe.fazenda.sp.gov.br/ws/nfeinutilizacao4.asmx</NFeInutilizacao>
+      </Homologation>
+      <States>
+        <State cUF="35" uf="SP" name="São Paulo" enabled="true" />
+      </States>
+    </Provider>
+
+    <!-- SVAN - Sefaz Virtual Ambiente Nacional (MA - 21) -->
+    <Provider key="SVAN" name="SEFAZ Virtual Ambiente Nacional (SVAN)" version="4.00" enabled="true">
+      <Production>
+        <NFeAutorizacao>https://www.sefazvirtual.fazenda.gov.br/NFeAutorizacao4/NFeAutorizacao4.asmx</NFeAutorizacao>
+        <NFeRetAutorizacao>https://www.sefazvirtual.fazenda.gov.br/NFeRetAutorizacao4/NFeRetAutorizacao4.asmx</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://www.sefazvirtual.fazenda.gov.br/NFeRecepcaoEvento4/NFeRecepcaoEvento4.asmx</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://www.sefazvirtual.fazenda.gov.br/NFeConsultaProtocolo4/NFeConsultaProtocolo4.asmx</NFeConsultaProtocolo>
+        <NFeStatusServico>https://www.sefazvirtual.fazenda.gov.br/NFeStatusServico4/NFeStatusServico4.asmx</NFeStatusServico>
+        <NFeInutilizacao>https://www.sefazvirtual.fazenda.gov.br/NFeInutilizacao4/NFeInutilizacao4.asmx</NFeInutilizacao>
+      </Production>
+      <Homologation>
+        <NFeAutorizacao>https://hom.sefazvirtual.fazenda.gov.br/NFeAutorizacao4/NFeAutorizacao4.asmx</NFeAutorizacao>
+        <NFeRetAutorizacao>https://hom.sefazvirtual.fazenda.gov.br/NFeRetAutorizacao4/NFeRetAutorizacao4.asmx</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://hom.sefazvirtual.fazenda.gov.br/NFeRecepcaoEvento4/NFeRecepcaoEvento4.asmx</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://hom.sefazvirtual.fazenda.gov.br/NFeConsultaProtocolo4/NFeConsultaProtocolo4.asmx</NFeConsultaProtocolo>
+        <NFeStatusServico>https://hom.sefazvirtual.fazenda.gov.br/NFeStatusServico4/NFeStatusServico4.asmx</NFeStatusServico>
+        <NFeInutilizacao>https://hom.sefazvirtual.fazenda.gov.br/NFeInutilizacao4/NFeInutilizacao4.asmx</NFeInutilizacao>
+      </Homologation>
+      <States>
+        <State cUF="21" uf="MA" name="Maranhão" enabled="true" />
+      </States>
+    </Provider>
+
+    <!-- SVRS - Sefaz Virtual Rio Grande do Sul -->
+    <Provider key="SVRS" name="SEFAZ Virtual Rio Grande do Sul (SVRS)" version="4.00" enabled="true">
+      <Production>
+        <NFeAutorizacao>https://nfe.svrs.rs.gov.br/ws/NfeAutorizacao/NFeAutorizacao4.asmx</NFeAutorizacao>
+        <NFeRetAutorizacao>https://nfe.svrs.rs.gov.br/ws/NfeRetAutorizacao/NFeRetAutorizacao4.asmx</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://nfe.svrs.rs.gov.br/ws/recepcaoevento/recepcaoevento4.asmx</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://nfe.svrs.rs.gov.br/ws/NfeConsulta/NfeConsulta4.asmx</NFeConsultaProtocolo>
+        <NFeStatusServico>https://nfe.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx</NFeStatusServico>
+        <NFeInutilizacao>https://nfe.svrs.rs.gov.br/ws/nfeinutilizacao/nfeinutilizacao4.asmx</NFeInutilizacao>
+      </Production>
+      <Homologation>
+        <NFeAutorizacao>https://nfe-homologacao.svrs.rs.gov.br/ws/NfeAutorizacao/NFeAutorizacao4.asmx</NFeAutorizacao>
+        <NFeRetAutorizacao>https://nfe-homologacao.svrs.rs.gov.br/ws/NfeRetAutorizacao/NFeRetAutorizacao4.asmx</NFeRetAutorizacao>
+        <NFeRecepcaoEvento>https://nfe-homologacao.svrs.rs.gov.br/ws/recepcaoevento/recepcaoevento4.asmx</NFeRecepcaoEvento>
+        <NFeConsultaProtocolo>https://nfe-homologacao.svrs.rs.gov.br/ws/NfeConsulta/NfeConsulta4.asmx</NFeConsultaProtocolo>
+        <NFeStatusServico>https://nfe-homologacao.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx</NFeStatusServico>
+        <NFeInutilizacao>https://nfe-homologacao.svrs.rs.gov.br/ws/nfeinutilizacao/nfeinutilizacao4.asmx</NFeInutilizacao>
+      </Homologation>
+      <States>
+        <State cUF="12" uf="AC" name="Acre" enabled="true" />
+        <State cUF="27" uf="AL" name="Alagoas" enabled="true" />
+        <State cUF="16" uf="AP" name="Amapá" enabled="true" />
+        <State cUF="53" uf="DF" name="Distrito Federal" enabled="true" />
+        <State cUF="32" uf="ES" name="Espírito Santo" enabled="true" />
+        <State cUF="15" uf="PA" name="Pará" enabled="true" />
+        <State cUF="25" uf="PB" name="Paraíba" enabled="true" />
+        <State cUF="22" uf="PI" name="Piauí" enabled="true" />
+        <State cUF="33" uf="RJ" name="Rio de Janeiro" enabled="true" />
+        <State cUF="24" uf="RN" name="Rio Grande do Norte" enabled="true" />
+        <State cUF="11" uf="RO" name="Rondônia" enabled="true" />
+        <State cUF="14" uf="RR" name="Roraima" enabled="true" />
+        <State cUF="42" uf="SC" name="Santa Catarina" enabled="true" />
+        <State cUF="28" uf="SE" name="Sergipe" enabled="true" />
+        <State cUF="17" uf="TO" name="Tocantins" enabled="true" />
+      </States>
+    </Provider>
+  </Providers>
+</NfeProvidersConfig>
+
