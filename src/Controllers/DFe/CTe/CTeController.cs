@@ -1,26 +1,16 @@
+using System.Text;
+using System.Xml;
+using application.services.Logging;
 using CTe.Classes.Informacoes.Tipos;
+using CTe.Classes.Servicos.Evento.Flags;
 using CTe.Classes.Servicos.Tipos;
-using CTe.Servicos;
+using CTe.Servicos.Eventos;
+using CTe.Servicos.Factory;
 using CTe.Servicos.Recepcao;
-using CTe.Utils.CTe;
 using DFe.Classes.Entidades;
 using DFe.Classes.Flags;
 using DFe.Utils;
-using application.services.Logging;
-using System;
 using Microsoft.AspNetCore.Mvc;
-using NFe.Classes;
-using NFe.Classes.Informacoes.Identificacao.Tipos;
-using NFe.Utils.NFe;
-using services.Controllers.DFe.NFe.Schemas;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Text.Json;
-using System.Xml;
-using System.Xml.Linq;
-using CT = CTe.Classes;
-using DFeUtils = DFe.Utils;
-using NFUtils = CTe.Utils;
 
 namespace services.Controllers.DFe.CTe
 {
@@ -82,6 +72,57 @@ namespace services.Controllers.DFe.CTe
 
                 return Content(cteProc.OuterXml, "application/xml", Encoding.UTF8);
 
+            }
+            catch (Exception ex)
+            {
+                this.LogApiError(ex);
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        public sealed class CancelCteRequest
+        {
+            public string ChCTe { get; set; } = string.Empty;
+            public string NProt { get; set; } = string.Empty;
+            public string XJust { get; set; } = string.Empty;
+            public string Cnpj { get; set; } = string.Empty;
+            public int TpAmb { get; set; } = 1;
+            public int CUF { get; set; } = 51;
+            public int NSeqEvento { get; set; } = 1;
+        }
+
+        [HttpPost("cancel")]
+        public IActionResult Cancel(
+            [FromHeader(Name = "X-Cert-Base64")] string base64,
+            [FromHeader(Name = "X-Cert-Password")] string password,
+            [FromBody] CancelCteRequest request)
+        {
+            try
+            {
+                if (request == null || string.IsNullOrWhiteSpace(request.ChCTe) || string.IsNullOrWhiteSpace(request.NProt))
+                    return BadRequest(new { message = "Chave do CT-e e protocolo de autorização são obrigatórios." });
+
+                var justificativa = (request.XJust ?? string.Empty).Trim();
+                if (justificativa.Length < 15)
+                    return BadRequest(new { message = "A justificativa do cancelamento deve ter no mínimo 15 caracteres." });
+
+                var certificate = application.services.Certificate.Loader(base64, password);
+                var evento = ClassesFactory.CriaEvCancCTe(justificativa, request.NProt.Trim());
+                var servico = new ServicoController();
+                var retorno = servico.Executar(
+                    (TipoAmbiente)request.TpAmb,
+                    tpEmis.teNormal,
+                    (Estado)request.CUF,
+                    versao.ve400,
+                    certificate,
+                    CTeTipoEvento.Cancelamento,
+                    request.NSeqEvento > 0 ? request.NSeqEvento : 1,
+                    request.ChCTe.Trim(),
+                    request.Cnpj.Trim(),
+                    evento);
+
+                var xml = FuncoesXml.ClasseParaXmlString(retorno);
+                return Content(xml, "application/xml", Encoding.UTF8);
             }
             catch (Exception ex)
             {

@@ -1,24 +1,12 @@
+using System.Text;
+using System.Xml;
+using application.services.Logging;
 using CTe.Classes.Informacoes.Tipos;
 using CTe.Classes.Servicos.Tipos;
-using CTe.Servicos;
 using CTe.Servicos.Recepcao;
-using CTe.Utils.CTe;
 using DFe.Classes.Entidades;
 using DFe.Classes.Flags;
-using application.services.Logging;
 using Microsoft.AspNetCore.Mvc;
-using NFe.Classes;
-using NFe.Classes.Informacoes.Identificacao.Tipos;
-using NFe.Utils.NFe;
-using services.Controllers.DFe.NFe.Schemas;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Text.Json;
-using System.Xml;
-using System.Xml.Linq;
-using CT = CTe.Classes;
-using DFeUtils = DFe.Utils;
-using NFUtils = CTe.Utils;
 
 namespace services.Controllers.DFe.MDFe
 {
@@ -40,7 +28,7 @@ namespace services.Controllers.DFe.MDFe
                 var ns = new XmlNamespaceManager(body.NameTable);
                 ns.AddNamespace("n", "http://www.portalfiscal.inf.br/cte");
 
-                // 1. Extraòòo de Dados do XML
+                // 1. Extra√ß√£o de Dados do XML
                 var ide = body.SelectSingleNode("//n:ide", ns);
                 var infCte = (XmlElement)body.SelectSingleNode("//n:infCte", ns);
 
@@ -49,16 +37,16 @@ namespace services.Controllers.DFe.MDFe
                 var cUF = (Estado)int.Parse(ide.SelectSingleNode("n:cUF", ns).InnerText);
                 var versao = application.services.Extensions.GetEnumByXmlEnumAttribute<versao>(infCte.GetAttribute("versao"));
 
-                // 2. Chamada do Serviòo
+                // 2. Chamada do Servi√ßo
                 var resultado = ServicoCTeRecepcao.CTeRecepcaoSincronoV4(tpAmb, tpEmis, cUF, versao, certificate, body);
 
-                // 3. Verificaòòo de Status
+                // 3. Verifica√ß√£o de Status
                 var nsRes = new XmlNamespaceManager(new NameTable());
                 nsRes.AddNamespace("n", "http://www.portalfiscal.inf.br/cte");
                 var prot = resultado.SelectSingleNode("//n:protCTe", nsRes);
                 var cStat = prot?.SelectSingleNode("//n:cStat", nsRes)?.InnerText;
 
-                // 4. Montagem do procCTe (Distribuiòòo)
+                // 4. Montagem do procCTe (Distribui√ß√£o)
                 var cteProc = new XmlDocument { PreserveWhitespace = false };
                 var root = (XmlElement)cteProc.AppendChild(cteProc.CreateElement("cteProc", "http://www.portalfiscal.inf.br/cte"));
                 root.SetAttribute("versao", "4.00");

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NfseProvidersConfig>
+  <!-- Provedor padrão quando o município não estiver mapeado especificamente ou quando não houver override -->
+  <DefaultProvider>ISSNET</DefaultProvider>
+
+  <Providers>
+    <Provider key="ISSNET" name="ISS.NET (Padrão Nacional v1.01)" standard="NACIONAL" version="1.01" enabled="true">
+      <SoapNamespace>http://www.sped.fazenda.gov.br/nfse</SoapNamespace>
+      <NfseNamespace>http://www.sped.fazenda.gov.br/nfse</NfseNamespace>
+      <SoapActionGerar>http://www.sped.fazenda.gov.br/nfse/GerarNfse</SoapActionGerar>
+      <SoapActionCancelar>http://www.sped.fazenda.gov.br/nfse/CancelarNfse</SoapActionCancelar>
+      <SoapCancelRequestElement>CancelarNfse</SoapCancelRequestElement>
+      <CancelEventType>e101103</CancelEventType>
+      <DefaultEndpoint>https://nfse.issnetonline.com.br/wsnfsenacional/goiania/nfse.asmx</DefaultEndpoint>
+      <DefaultHomologationEndpoint>https://nfse.issnetonline.com.br/wsnfsenacional/homologacao/nfse.asmx</DefaultHomologationEndpoint>
+      <Municipalities>
+        <Municipality
+          ibge="5208707"
+          name="Goiânia"
+          uf="GO"
+          endpoint="https://nfse.issnetonline.com.br/wsnfsenacional/goiania/nfse.asmx"
+          homologationEndpoint="https://nfse.issnetonline.com.br/wsnfsenacional/homologacao/nfse.asmx"
+          enabled="true" />
+      </Municipalities>
+    </Provider>
+
+    <Provider key="GESTAOISS" name="Gestão ISS (ABRASF 2.04)" standard="ABRASF" version="2.04" enabled="true">
+      <SoapNamespace>http://nfse.abrasf.org.br</SoapNamespace>
+      <NfseNamespace>http://www.abrasf.org.br/nfse.xsd</NfseNamespace>
+      <SoapActionGerar>http://nfse.abrasf.org.br/GerarNfse</SoapActionGerar>
+      <SoapActionCancelar>http://nfse.abrasf.org.br/CancelarNfse</SoapActionCancelar>
+      <SoapCancelRequestElement>CancelarNfseRequest</SoapCancelRequestElement>
+      <DefaultEndpoint>https://homologacao.gestaoiss.com.br/ws/nfse.asmx</DefaultEndpoint>
+      <DefaultHomologationEndpoint>https://homologacao.gestaoiss.com.br/ws/nfse.asmx</DefaultHomologationEndpoint>
+      <Municipalities />
+    </Provider>
+
+    <Provider key="NACIONAL" name="NFS-e Nacional (SEFIN/ADN)" standard="NACIONAL" version="1.01" enabled="true">
+      <ProductionEndpoint>https://sefin.nfse.gov.br/SefinNacional/nfse</ProductionEndpoint>
+      <HomologationEndpoint>https://sefin.producaorestrita.nfse.gov.br/SefinNacional/nfse</HomologationEndpoint>
+      <AdnProductionEndpoint>https://adn.nfse.gov.br/contribuintes</AdnProductionEndpoint>
+      <AdnHomologationEndpoint>https://adn.producaorestrita.nfse.gov.br/contribuintes</AdnHomologationEndpoint>
+      <DanfseProductionEndpoint>https://adn.nfse.gov.br/danfse</DanfseProductionEndpoint>
+      <DanfseHomologationEndpoint>https://adn.producaorestrita.nfse.gov.br/danfse</DanfseHomologationEndpoint>
+      <Municipalities>
+        <Municipality
+          ibge="5108402"
+          name="Várzea Grande"
+          uf="MT"
+          enabled="true" />
+      </Municipalities>
+    </Provider>
+  </Providers>
+</NfseProvidersConfig>

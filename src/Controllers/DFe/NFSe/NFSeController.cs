@@ -1,4 +1,4 @@
-﻿using application.services.Controllers.DFe.NFSe.Providers;
+using application.services.Controllers.DFe.NFSe.Providers;
 using application.services.Logging;
 using Microsoft.AspNetCore.Mvc;
 using OpenAC.Net.DFe.Core;
@@ -15,23 +15,66 @@ namespace application.services.Controllers.DFe.NFSe
     public class NFSeController : ControllerBase
     {
         private readonly NFSeProviderResolver providerResolver;
+        private readonly NfseProvidersXmlStore providersConfigStore;
 
-        public NFSeController(NFSeProviderResolver providerResolver)
+        public NFSeController(NFSeProviderResolver providerResolver, NfseProvidersXmlStore providersConfigStore)
         {
             this.providerResolver = providerResolver;
+            this.providersConfigStore = providersConfigStore;
+        }
+
+        [HttpGet("providers")]
+        public IActionResult GetProviders()
+        {
+            return Ok(providersConfigStore.GetConfig());
         }
 
         [HttpPost("generate")]
         [Consumes("application/xml")]
-        public async Task<IActionResult> Generate([FromHeader(Name = "X-Cert-Base64")] string base64, [FromHeader(Name = "X-Cert-Password")] string password, [FromBody] XmlDocument body)
+        public async Task<IActionResult> Generate(
+            [FromHeader(Name = "X-Cert-Base64")] string base64,
+            [FromHeader(Name = "X-Cert-Password")] string password,
+            [FromBody] XmlDocument body,
+            [FromHeader(Name = "X-NFSe-Provider")] string? requestedProvider = null)
         {
             try
             {
                 var certificate = application.services.Certificate.Loader(base64, password);
-                var provider = providerResolver.Resolve(body);
-                var responseXml = await provider.GenerateAsync(certificate, body);
+                var provider = providerResolver.Resolve(body, requestedProvider);
+                var responseBody = await provider.GenerateAsync(certificate, body);
+                var trimmed = responseBody.TrimStart();
+                var contentType = trimmed.StartsWith("{") || trimmed.StartsWith("[")
+                    ? "application/json"
+                    : "application/xml";
 
-                return Content(responseXml, "application/xml", Encoding.UTF8);
+                return Content(responseBody, contentType, Encoding.UTF8);
+            }
+            catch (Exception ex)
+            {
+                this.LogApiError(ex);
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("cancel")]
+        [Consumes("application/xml")]
+        public async Task<IActionResult> Cancel(
+            [FromHeader(Name = "X-Cert-Base64")] string base64,
+            [FromHeader(Name = "X-Cert-Password")] string password,
+            [FromBody] XmlDocument body,
+            [FromHeader(Name = "X-NFSe-Provider")] string? requestedProvider = null)
+        {
+            try
+            {
+                var certificate = application.services.Certificate.Loader(base64, password);
+                var provider = providerResolver.Resolve(body, requestedProvider);
+                var responseBody = await provider.CancelAsync(certificate, body);
+                var trimmed = responseBody.TrimStart();
+                var contentType = trimmed.StartsWith("{") || trimmed.StartsWith("[")
+                    ? "application/json"
+                    : "application/xml";
+
+                return Content(responseBody, contentType, Encoding.UTF8);
             }
             catch (Exception ex)
             {
@@ -48,7 +91,7 @@ namespace application.services.Controllers.DFe.NFSe
                 var certificate = application.services.Certificate.Loader(base64, password);
                 var openNFSeNacional = new OpenNFSeNacional();
 
-                openNFSeNacional.Configuracoes.WebServices.Ambiente = (DFeTipoAmbiente)consultaNumero.TipoAmbiente!;
+                openNFSeNacional.Configuracoes.WebServices.Ambiente = (DFeTipoAmbiente)(consultaNumero.TipoAmbiente ?? 1);
                 openNFSeNacional.Configuracoes.Arquivos.PathSchemas = Path.Combine(AppContext.BaseDirectory, "Schemas", "NFSe", "1.00");
 
                 var retorno = await openNFSeNacional.ConsultaChaveDpsAsync(certificate, consultaNumero.numeroDps ?? string.Empty);
@@ -81,7 +124,7 @@ namespace application.services.Controllers.DFe.NFSe
                 var certificate = application.services.Certificate.Loader(base64, password);
                 var openNFSeNacional = new OpenNFSeNacional();
 
-                openNFSeNacional.Configuracoes.WebServices.Ambiente = (DFeTipoAmbiente)consultaChave.TipoAmbiente!;
+                openNFSeNacional.Configuracoes.WebServices.Ambiente = (DFeTipoAmbiente)(consultaChave.TipoAmbiente ?? 1);
                 openNFSeNacional.Configuracoes.Arquivos.PathSchemas = Path.Combine(AppContext.BaseDirectory, "Schemas", "NFSe", "1.00");
 
                 var retorno = await openNFSeNacional.ConsultaChaveAsync(certificate, consultaChave.chNFSe ?? string.Empty);
@@ -112,12 +155,12 @@ namespace application.services.Controllers.DFe.NFSe
             try
             {
                 var certificate = application.services.Certificate.Loader(base64, password);
-                var openNFSeNacional = new OpenNFSeNacional();
+                var nacionalProvider = new Providers.Nacional.NacionalNfseProvider(providersConfigStore);
 
-                openNFSeNacional.Configuracoes.WebServices.Ambiente = (DFeTipoAmbiente)consultaChave.TipoAmbiente!;
-                openNFSeNacional.Configuracoes.Arquivos.PathSchemas = Path.Combine(AppContext.BaseDirectory, "Schemas", "NFSe", "1.00");
-
-                var retorno = await openNFSeNacional.DownloadDANFSeAsync(certificate, consultaChave.chNFSe ?? string.Empty);
+                var retorno = await nacionalProvider.DownloadDanfseAsync(
+                    certificate,
+                    consultaChave.chNFSe ?? string.Empty,
+                    consultaChave.TipoAmbiente);
 
                 return Ok(new
                 {

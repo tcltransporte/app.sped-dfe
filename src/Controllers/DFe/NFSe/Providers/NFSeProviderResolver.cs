@@ -5,16 +5,42 @@ namespace application.services.Controllers.DFe.NFSe.Providers
     public sealed class NFSeProviderResolver
     {
         private readonly IReadOnlyList<INFSeProvider> providers;
+        private readonly NfseProvidersXmlStore configStore;
 
-        public NFSeProviderResolver(IEnumerable<INFSeProvider> providers)
+        public NFSeProviderResolver(IEnumerable<INFSeProvider> providers, NfseProvidersXmlStore configStore)
         {
             this.providers = providers.ToArray();
+            this.configStore = configStore;
         }
 
-        public INFSeProvider Resolve(XmlDocument xml)
+        public INFSeProvider Resolve(XmlDocument xml, string? requestedProviderKey = null)
         {
-            var context = CreateContext(xml);
-            var provider = providers.FirstOrDefault(item => item.Supports(context));
+            var config = configStore.GetConfig();
+            var context = CreateContext(xml, requestedProviderKey);
+
+            INFSeProvider? FindEnabledByKey(string? key)
+            {
+                if (string.IsNullOrWhiteSpace(key))
+                    return null;
+
+                var normalizedKey = key.Trim();
+                if (!config.IsProviderEnabled(normalizedKey))
+                    return null;
+
+                return providers.FirstOrDefault(p =>
+                    string.Equals(p.Key, normalizedKey, StringComparison.OrdinalIgnoreCase) &&
+                    p.Supports(context));
+            }
+
+            var mappedProviderKey =
+                config.FindProviderKeyByMunicipalities(context.CandidateMunicipios) ??
+                config.FindProviderKeyByMunicipality(context.CodigoMunicipio);
+
+            var provider =
+                FindEnabledByKey(context.RequestedProviderKey) ??
+                FindEnabledByKey(mappedProviderKey) ??
+                FindEnabledByKey(config.DefaultProvider) ??
+                providers.FirstOrDefault(item => config.IsProviderEnabled(item.Key) && item.Supports(context));
 
             if (provider == null)
             {
@@ -25,17 +51,47 @@ namespace application.services.Controllers.DFe.NFSe.Providers
             return provider;
         }
 
-        private static NFSeProviderContext CreateContext(XmlDocument xml)
+        private static NFSeProviderContext CreateContext(XmlDocument xml, string? requestedProviderKey)
         {
             if (xml.DocumentElement == null)
                 throw new InvalidOperationException("XML de NFS-e vazio ou inválido.");
 
+            var chNfse = FirstText(xml, "chNFSe");
+            var munFromKey = !string.IsNullOrWhiteSpace(chNfse) && chNfse.Length >= 7 && chNfse.Take(7).All(char.IsDigit)
+                ? chNfse[..7]
+                : null;
+
+            var infId =
+                (xml.SelectSingleNode("//*[local-name()='infDPS']") as XmlElement)?.GetAttribute("Id") ??
+                (xml.SelectSingleNode("//*[local-name()='infPedReg']") as XmlElement)?.GetAttribute("Id") ??
+                (xml.SelectSingleNode("//*[local-name()='infNFSe']") as XmlElement)?.GetAttribute("Id");
+
+            var munFromId = !string.IsNullOrWhiteSpace(infId) &&
+                            infId.Length >= 10 &&
+                            (infId.StartsWith("DPS", StringComparison.OrdinalIgnoreCase) ||
+                             infId.StartsWith("PRE", StringComparison.OrdinalIgnoreCase) ||
+                             infId.StartsWith("NFS", StringComparison.OrdinalIgnoreCase)) &&
+                            infId.Substring(3, 7).All(char.IsDigit)
+                ? infId.Substring(3, 7)
+                : null;
+
+            var munEmissor =
+                FirstText(xml, "cLocEmi") ??
+                FirstText(xml, "Prestador/Endereco/CodigoMunicipio") ??
+                FirstText(xml, "IdentificacaoNfse/CodigoMunicipio") ??
+                munFromKey ??
+                munFromId;
+
             return new NFSeProviderContext
             {
-                MunicipioPrestacao = FirstText(xml, "Servico/CodigoMunicipio"),
-                MunicipioIncidencia = FirstText(xml, "MunicipioIncidencia"),
-                MunicipioPrestador = FirstText(xml, "Prestador/Endereco/CodigoMunicipio"),
-                MunicipioTomador = FirstText(xml, "TomadorServico/Endereco/CodigoMunicipio")
+                RootLocalName = xml.DocumentElement.LocalName,
+                RequestedProviderKey = string.IsNullOrWhiteSpace(requestedProviderKey) ? null : requestedProviderKey.Trim().ToUpperInvariant(),
+                IsDpsXml = string.Equals(xml.DocumentElement.LocalName, "DPS", StringComparison.OrdinalIgnoreCase) ||
+                           xml.SelectSingleNode("//*[local-name()='infDPS']") != null,
+                MunicipioPrestacao = FirstText(xml, "Servico/CodigoMunicipio") ?? FirstText(xml, "locPrest/cLocPrestacao") ?? FirstText(xml, "IdentificacaoNfse/CodigoMunicipio") ?? munFromKey ?? munFromId,
+                MunicipioIncidencia = FirstText(xml, "MunicipioIncidencia") ?? FirstText(xml, "cLocIncid") ?? FirstText(xml, "cLocEmi") ?? munFromKey ?? munFromId,
+                MunicipioPrestador = munEmissor,
+                MunicipioTomador = FirstText(xml, "TomadorServico/Endereco/CodigoMunicipio") ?? FirstText(xml, "toma/end/endNac/cMun")
             };
         }
 

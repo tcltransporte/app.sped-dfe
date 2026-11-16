@@ -1,7 +1,7 @@
-﻿using application.services.Logging;
+using application.services.Logging;
 using application.services.Controllers.DFe.NFSe.Providers;
 using application.services.Controllers.DFe.NFSe.Providers.ISSNET;
-using application.services.Services;
+using application.services.Controllers.DFe.NFSe.Providers.Nacional;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
@@ -10,17 +10,8 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.Services
-//    .AddControllers();
-//.AddXmlSerializerFormatters();
-
 builder.Services.AddControllers(options =>
 {
-    // Remove qualquer formatter XML padrão
-    //options.InputFormatters.RemoveType<XmlSerializerInputFormatter>();
-    //options.InputFormatters.RemoveType<XmlDataContractSerializerInputFormatter>();
-
-    // Adiciona formatter XML customizado
     options.InputFormatters.Add(new XmlSerializerInputFormatter(options)
     {
         SupportedMediaTypes =
@@ -30,9 +21,10 @@ builder.Services.AddControllers(options =>
     });
 });
 
-builder.Services.AddSingleton<SefazSoapService>();
 builder.Services.AddSingleton<ApiErrorFileLogger>();
+builder.Services.AddSingleton<NfseProvidersXmlStore>();
 builder.Services.AddSingleton<INFSeProvider, IssNetGoianiaProvider>();
+builder.Services.AddSingleton<INFSeProvider, NacionalNfseProvider>();
 builder.Services.AddSingleton<NFSeProviderResolver>();
 
 builder.Services.AddOpenApi();
@@ -122,4 +114,3 @@ app.UseCors("AllowAll");
 app.MapControllers();
 
 app.Run();
-

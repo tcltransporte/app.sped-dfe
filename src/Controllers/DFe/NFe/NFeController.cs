@@ -1,25 +1,17 @@
-using CTe.Classes.Informacoes.Tipos;
-using CTe.Classes.Servicos.Tipos;
+using System.Text;
+using System.Xml;
+using application.services.Logging;
 using DFe.Classes.Entidades;
 using DFe.Classes.Flags;
-using application.services.Logging;
 using Microsoft.AspNetCore.Mvc;
 using NFe.Classes;
 using NFe.Classes.Informacoes.Identificacao.Tipos;
 using NFe.Servicos;
 using NFe.Utils.NFe;
-using services.Controllers.DFe.NFe.Schemas;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Text.Json;
-using System.Xml;
-using DFeUtils = DFe.Utils;
 using NF = NFe.Classes;
-using NFUtils = NFe.Utils;
 
-namespace services.Controllers.DFe.NFSe
+namespace services.Controllers.DFe.NFe
 {
-
     [ApiController]
     [Route("DFe/[controller]")]
     public class NFeController : ControllerBase
@@ -43,7 +35,7 @@ namespace services.Controllers.DFe.NFSe
                 var chNFE = body.SelectSingleNode("//chNFE")?.InnerText;
 
                 if (string.IsNullOrEmpty(ufAutor) || string.IsNullOrEmpty(documento))
-                    return BadRequest("ufAutor e documento sòo obrigatòrios.");
+                    return BadRequest("ufAutor e documento s√£o obrigat√≥rios.");
 
                 var certBytes = Convert.FromBase64String(base64);
 
@@ -109,12 +101,12 @@ namespace services.Controllers.DFe.NFSe
                 var ns = new XmlNamespaceManager(body.NameTable);
                 ns.AddNamespace("n", "http://www.portalfiscal.inf.br/nfe");
 
-                // 1. Extraòòo dos dados da NFe
+                // 1. Extra√ß√£o dos dados da NFe
                 var ide = body.SelectSingleNode("//n:ide", ns);
                 var infNFe = (XmlElement)body.SelectSingleNode("//n:infNFe", ns);
 
                 if (ide == null || infNFe == null)
-                    return BadRequest(new { message = "XML invòlido: ide ou infNFe nòo encontrado." });
+                    return BadRequest(new { message = "XML inv√°lido: ide ou infNFe n√£o encontrado." });
 
                 var tpAmb = (TipoAmbiente)int.Parse(ide.SelectSingleNode("n:tpAmb", ns).InnerText);
                 var tpEmis = (TipoEmissao)int.Parse(ide.SelectSingleNode("n:tpEmis", ns).InnerText);
@@ -159,7 +151,7 @@ namespace services.Controllers.DFe.NFSe
                 var nfeOriginal = body.SelectSingleNode("//n:NFe", ns) ?? body.DocumentElement;
 
                 if (nfeOriginal == null)
-                    return BadRequest(new { message = "Tag NFe original nòo encontrada." });
+                    return BadRequest(new { message = "Tag NFe original n√£o encontrada." });
 
                 root?.AppendChild(nfeProc.ImportNode(nfeOriginal, true));
 
@@ -173,7 +165,7 @@ namespace services.Controllers.DFe.NFSe
                 {
 
 
-                    // pega os campos òteis da SEFAZ
+                    // pega os campos √∫teis da SEFAZ
                     var tpAmbNode = retornoDoc.SelectSingleNode("//n:tpAmb", nsRet);
                     var verAplicNode = retornoDoc.SelectSingleNode("//n:verAplic", nsRet);
                     var cStatNode = retornoDoc.SelectSingleNode("//n:cStat", nsRet);
@@ -185,7 +177,7 @@ namespace services.Controllers.DFe.NFSe
                     var digValNode = retornoDoc.SelectSingleNode("//n:digVal", nsRet);
 
 
-                    // Se nòo veio protNFe, cria artificialmente
+                    // Se n√£o veio protNFe, cria artificialmente
                     var protNFe = nfeProc.CreateElement("protNFe", "http://www.portalfiscal.inf.br/nfe");
                     protNFe.SetAttribute("versao", infNFe.GetAttribute("versao"));
 
