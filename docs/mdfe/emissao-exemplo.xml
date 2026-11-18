@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MDFe xmlns="http://www.portalfiscal.inf.br/mdfe">
+  <!--
+    Modelo de XML de Emissão de MDF-e 3.00 (POST /DFe/mdfe/generate).
+    - O atributo Id de <infMDFe> e o dígito verificador <cDV> são calculados automaticamente pelo SefazMdfeProvider
+      a partir de cUF, dhEmi, CNPJ/CPF, mod (58), serie, nMDF, tpEmis e cMDF.
+    - O autorizador (SVRS / SEFAZ_SP) é resolvido automaticamente em src/Config/mdfe-providers.xml
+      e o ambiente por <tpAmb> (1 = Produção, 2 = Homologação).
+    - O QR Code (<infMDFeSupl><qrCodMDFe>) e a assinatura digital (<Signature>) são inseridos automaticamente.
+    - O envio é realizado via MDFeRecepcaoSinc compactado em GZip+Base64 sobre SOAP 1.2.
+  -->
+  <infMDFe versao="3.00">
+    <ide>
+      <cUF>52</cUF>
+      <tpAmb>2</tpAmb>
+      <tpEmit>1</tpEmit>
+      <tpTransp>1</tpTransp>
+      <mod>58</mod>
+      <serie>1</serie>
+      <nMDF>100</nMDF>
+      <cMDF>12345678</cMDF>
+      <cDV>0</cDV>
+      <modal>1</modal>
+      <dhEmi>2026-11-16T10:00:00-03:00</dhEmi>
+      <tpEmis>1</tpEmis>
+      <procEmi>0</procEmi>
+      <verProc>app.sped-dfe 1.0</verProc>
+      <UFIni>GO</UFIni>
+      <UFFim>MT</UFFim>
+      <infMunCarrega>
+        <cMunCarrega>5208707</cMunCarrega>
+        <xMunCarrega>GOIANIA</xMunCarrega>
+      </infMunCarrega>
+    </ide>
+    <emit>
+      <CNPJ>04058687000177</CNPJ>
+      <IE>103456789</IE>
+      <xNome>TCL TRANSPORTE RODOVIARIO COSTA LEMES LTDA</xNome>
+      <xFant>TCL TRANSPORTE E LOGISTICA</xFant>
+      <enderEmit>
+        <xLgr>RUA 2</xLgr>
+        <nro>541</nro>
+        <xCpl>QUADRA A LOTE 09</xCpl>
+        <xBairro>CHACARAS RETIRO</xBairro>
+        <cMun>5208707</cMun>
+        <xMun>GOIANIA</xMun>
+        <CEP>74665834</CEP>
+        <UF>GO</UF>
+        <fone>6232055448</fone>
+      </enderEmit>
+    </emit>
+    <infModal versaoModal="3.00">
+      <rodo>
+        <infANTT>
+          <RNTRC>12345678</RNTRC>
+        </infANTT>
+        <veicTracao>
+          <cInt>001</cInt>
+          <placa>ABC1D23</placa>
+          <tara>8500</tara>
+          <capKG>30000</capKG>
+          <tpRod>02</tpRod>
+          <tpCar>02</tpCar>
+          <UF>GO</UF>
+          <condutor>
+            <xNome>MOTORISTA EXEMPLO</xNome>
+            <CPF>12345678901</CPF>
+          </condutor>
+        </veicTracao>
+      </rodo>
+    </infModal>
+    <infDoc>
+      <infMunDescarga>
+        <cMunDescarga>5103403</cMunDescarga>
+        <xMunDescarga>CUIABA</xMunDescarga>
+        <infCTe>
+          <chCTe>52261104058687000177570010000001001123456780</chCTe>
+        </infCTe>
+      </infMunDescarga>
+    </infDoc>
+    <tot>
+      <qCTe>1</qCTe>
+      <vCarga>50000.00</vCarga>
+      <cUnid>01</cUnid>
+      <qCarga>15000.0000</qCarga>
+    </tot>
+  </infMDFe>
+</MDFe>

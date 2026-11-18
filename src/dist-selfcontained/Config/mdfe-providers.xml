@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MdfeProvidersConfig>
+  <!-- Autorizador padrão quando a UF não estiver mapeada especificamente -->
+  <DefaultProvider>SVRS</DefaultProvider>
+
+  <Providers>
+    <!-- SVRS (Secretaria Virtual do Rio Grande do Sul - Autorizador padrão de MDF-e para todo o Brasil) -->
+    <Provider key="SVRS" name="Sefaz Virtual RS" version="3.00" enabled="true">
+      <Production>
+        <MDFeRecepcaoSinc>https://mdfe.svrs.rs.gov.br/ws/MDFeRecepcaoSinc/MDFeRecepcaoSinc.asmx</MDFeRecepcaoSinc>
+        <MDFeRecepcaoEvento>https://mdfe.svrs.rs.gov.br/ws/MDFeRecepcaoEvento/MDFeRecepcaoEvento.asmx</MDFeRecepcaoEvento>
+        <MDFeConsulta>https://mdfe.svrs.rs.gov.br/ws/MDFeConsulta/MDFeConsulta.asmx</MDFeConsulta>
+        <MDFeStatusServico>https://mdfe.svrs.rs.gov.br/ws/MDFeStatusServico/MDFeStatusServico.asmx</MDFeStatusServico>
+        <MDFeConsNaoEnc>https://mdfe.svrs.rs.gov.br/ws/MDFeConsNaoEnc/MDFeConsNaoEnc.asmx</MDFeConsNaoEnc>
+        <QrCode>https://dfe-portal.svrs.rs.gov.br/mdfe/qrCode</QrCode>
+      </Production>
+      <Homologation>
+        <MDFeRecepcaoSinc>https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeRecepcaoSinc/MDFeRecepcaoSinc.asmx</MDFeRecepcaoSinc>
+        <MDFeRecepcaoEvento>https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeRecepcaoEvento/MDFeRecepcaoEvento.asmx</MDFeRecepcaoEvento>
+        <MDFeConsulta>https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeConsulta/MDFeConsulta.asmx</MDFeConsulta>
+        <MDFeStatusServico>https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeStatusServico/MDFeStatusServico.asmx</MDFeStatusServico>
+        <MDFeConsNaoEnc>https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeConsNaoEnc/MDFeConsNaoEnc.asmx</MDFeConsNaoEnc>
+        <QrCode>https://dfe-portal.svrs.rs.gov.br/mdfe/qrCode</QrCode>
+      </Homologation>
+      <States>
+        <State cUF="11" uf="RO" name="Rondônia" enabled="true" />
+        <State cUF="12" uf="AC" name="Acre" enabled="true" />
+        <State cUF="13" uf="AM" name="Amazonas" enabled="true" />
+        <State cUF="14" uf="RR" name="Roraima" enabled="true" />
+        <State cUF="15" uf="PA" name="Pará" enabled="true" />
+        <State cUF="16" uf="AP" name="Amapá" enabled="true" />
+        <State cUF="17" uf="TO" name="Tocantins" enabled="true" />
+        <State cUF="21" uf="MA" name="Maranhão" enabled="true" />
+        <State cUF="22" uf="PI" name="Piauí" enabled="true" />
+        <State cUF="23" uf="CE" name="Ceará" enabled="true" />
+        <State cUF="24" uf="RN" name="Rio Grande do Norte" enabled="true" />
+        <State cUF="25" uf="PB" name="Paraíba" enabled="true" />
+        <State cUF="26" uf="PE" name="Pernambuco" enabled="true" />
+        <State cUF="27" uf="AL" name="Alagoas" enabled="true" />
+        <State cUF="28" uf="SE" name="Sergipe" enabled="true" />
+        <State cUF="29" uf="BA" name="Bahia" enabled="true" />
+        <State cUF="31" uf="MG" name="Minas Gerais" enabled="true" />
+        <State cUF="32" uf="ES" name="Espírito Santo" enabled="true" />
+        <State cUF="33" uf="RJ" name="Rio de Janeiro" enabled="true" />
+        <State cUF="35" uf="SP" name="São Paulo" enabled="true" />
+        <State cUF="41" uf="PR" name="Paraná" enabled="true" />
+        <State cUF="42" uf="SC" name="Santa Catarina" enabled="true" />
+        <State cUF="43" uf="RS" name="Rio Grande do Sul" enabled="true" />
+        <State cUF="50" uf="MS" name="Mato Grosso do Sul" enabled="true" />
+        <State cUF="51" uf="MT" name="Mato Grosso" enabled="true" />
+        <State cUF="52" uf="GO" name="Goiás" enabled="true" />
+        <State cUF="53" uf="DF" name="Distrito Federal" enabled="true" />
+      </States>
+    </Provider>
+
+    <!-- SEFAZ São Paulo (Opcional / alternativo para SP) -->
+    <Provider key="SEFAZ_SP" name="SEFAZ São Paulo" version="3.00" enabled="false">
+      <Production>
+        <MDFeRecepcaoSinc>https://nfe.fazenda.sp.gov.br/ws/mdfeRecepcaoSinc.asmx</MDFeRecepcaoSinc>
+        <MDFeRecepcaoEvento>https://nfe.fazenda.sp.gov.br/ws/mdfeRecepcaoEvento.asmx</MDFeRecepcaoEvento>
+        <MDFeConsulta>https://nfe.fazenda.sp.gov.br/ws/mdfeConsulta.asmx</MDFeConsulta>
+        <MDFeStatusServico>https://nfe.fazenda.sp.gov.br/ws/mdfeStatusServico.asmx</MDFeStatusServico>
+        <MDFeConsNaoEnc>https://nfe.fazenda.sp.gov.br/ws/mdfeConsNaoEnc.asmx</MDFeConsNaoEnc>
+        <QrCode>https://dfe-portal.svrs.rs.gov.br/mdfe/qrCode</QrCode>
+      </Production>
+      <Homologation>
+        <MDFeRecepcaoSinc>https://homologacao.nfe.fazenda.sp.gov.br/ws/mdfeRecepcaoSinc.asmx</MDFeRecepcaoSinc>
+        <MDFeRecepcaoEvento>https://homologacao.nfe.fazenda.sp.gov.br/ws/mdfeRecepcaoEvento.asmx</MDFeRecepcaoEvento>
+        <MDFeConsulta>https://homologacao.nfe.fazenda.sp.gov.br/ws/mdfeConsulta.asmx</MDFeConsulta>
+        <MDFeStatusServico>https://homologacao.nfe.fazenda.sp.gov.br/ws/mdfeStatusServico.asmx</MDFeStatusServico>
+        <MDFeConsNaoEnc>https://homologacao.nfe.fazenda.sp.gov.br/ws/mdfeConsNaoEnc.asmx</MDFeConsNaoEnc>
+        <QrCode>https://dfe-portal.svrs.rs.gov.br/mdfe/qrCode</QrCode>
+      </Homologation>
+      <States>
+        <State cUF="35" uf="SP" name="São Paulo" enabled="true" />
+      </States>
+    </Provider>
+  </Providers>
+</MdfeProvidersConfig>

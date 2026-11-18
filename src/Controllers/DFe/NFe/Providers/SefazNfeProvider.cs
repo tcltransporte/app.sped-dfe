@@ -33,6 +33,7 @@ namespace application.services.Controllers.DFe.NFe.Providers
             if (body?.DocumentElement == null) throw new InvalidOperationException("XML de NF-e vazio ou inválido.");
 
             application.services.Extensions.LimparCaracteresEspeciais(body.DocumentElement);
+            application.services.Extensions.RemoverCaracteresDeEdicao(body.DocumentElement);
 
             var ns = new XmlNamespaceManager(body.NameTable);
             ns.AddNamespace("n", NfeNamespace);

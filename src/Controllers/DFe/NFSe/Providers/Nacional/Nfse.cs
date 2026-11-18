@@ -440,7 +440,7 @@ namespace application.services.Controllers.DFe.NFSe.Providers.Nacional
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             using var response = await client.PostAsync(endpoint, content);
-            return await response.Content.ReadAsStringAsync();
+            return await UpstreamResponse.ReadAsync(response, endpoint);
         }
 
         private static void SignByReferenceIfNeeded(XmlDocument doc, X509Certificate2 certificate, string signatureParentLocalName, string targetLocalName)

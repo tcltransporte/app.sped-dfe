@@ -832,7 +832,7 @@ namespace application.services.Controllers.DFe.NFSe.Providers.ISSNET
             client.DefaultRequestHeaders.TryAddWithoutValidation("SOAPAction", soapAction);
 
             using var response = await client.PostAsync(endpoint, content);
-            return await response.Content.ReadAsStringAsync();
+            return await UpstreamResponse.ReadAsync(response, endpoint);
         }
     }
 }

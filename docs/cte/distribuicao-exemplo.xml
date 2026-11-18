@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DistribuicaoDFe>
+  <!--
+    Modelo de XML para Distribuição DF-e de CT-e (POST /DFe/cte/distribuition).
+    - cUFAutor: sigla da UF (ex.: GO, MT, SP) ou código IBGE da UF (ex.: 52, 51, 35).
+    - documento: CNPJ (14 dígitos) ou CPF (11 dígitos) do interessado.
+    - Informe apenas um dos filtros de consulta:
+      * <ultNSU> para consulta de lote a partir do último NSU;
+      * <nSU> para consulta de um NSU específico;
+      * <chCTe> para consulta direta pela chave de 44 dígitos.
+  -->
+  <tpAmb>1</tpAmb>
+  <cUFAutor>52</cUFAutor>
+  <documento>04058687000177</documento>
+  <ultNSU>000000000000000</ultNSU>
+</DistribuicaoDFe>

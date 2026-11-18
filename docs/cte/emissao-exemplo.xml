@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CTe xmlns="http://www.portalfiscal.inf.br/cte">
+  <!--
+    Modelo de XML de Emissão de CT-e 4.00 (POST /DFe/cte/generate).
+    - O atributo Id de <infCte> e o dígito verificador <cDV> são calculados automaticamente pelo SefazCteProvider
+      a partir de cUF, dhEmi, CNPJ/CPF, mod (57), serie, nCT, tpEmis e cCT.
+    - A SEFAZ Estadual / SVRS é resolvida automaticamente pela tag <cUF> em src/Config/cte-providers.xml
+      e o ambiente por <tpAmb> (1 = Produção, 2 = Homologação).
+    - O QR Code (<infCTeSupl><qrCodCTe>) e a assinatura digital (<Signature>) são inseridos automaticamente.
+    - O envio é realizado via CTeRecepcaoSincV4 compactado em GZip+Base64 sobre SOAP 1.2.
+  -->
+  <infCte versao="4.00">
+    <ide>
+      <cUF>52</cUF>
+      <cCT>12345678</cCT>
+      <CFOP>5353</CFOP>
+      <natOp>PRESTACAO DE SERVICO DE TRANSPORTE</natOp>
+      <mod>57</mod>
+      <serie>1</serie>
+      <nCT>100</nCT>
+      <dhEmi>2026-11-16T10:00:00-03:00</dhEmi>
+      <tpImp>1</tpImp>
+      <tpEmis>1</tpEmis>
+      <cDV>0</cDV>
+      <tpAmb>2</tpAmb>
+      <tpCTe>0</tpCTe>
+      <procEmi>0</procEmi>
+      <verProc>app.sped-dfe 1.0</verProc>
+      <cMunEnv>5208707</cMunEnv>
+      <xMunEnv>GOIANIA</xMunEnv>
+      <UFEnv>GO</UFEnv>
+      <modal>01</modal>
+      <tpServ>0</tpServ>
+      <cMunIni>5208707</cMunIni>
+      <xMunIni>GOIANIA</xMunIni>
+      <UFIni>GO</UFIni>
+      <cMunFim>5103403</cMunFim>
+      <xMunFim>CUIABA</xMunFim>
+      <UFFim>MT</UFFim>
+      <retira>1</retira>
+      <indIEToma>1</indIEToma>
+      <toma3>
+        <toma>0</toma>
+      </toma3>
+    </ide>
+    <emit>
+      <CNPJ>04058687000177</CNPJ>
+      <IE>103456789</IE>
+      <xNome>TCL TRANSPORTE RODOVIARIO COSTA LEMES LTDA</xNome>
+      <xFant>TCL TRANSPORTE E LOGISTICA</xFant>
+      <enderEmit>
+        <xLgr>RUA 2</xLgr>
+        <nro>541</nro>
+        <xCpl>QUADRA A LOTE 09</xCpl>
+        <xBairro>CHACARAS RETIRO</xBairro>
+        <cMun>5208707</cMun>
+        <xMun>GOIANIA</xMun>
+        <CEP>74665834</CEP>
+        <UF>GO</UF>
+        <fone>6232055448</fone>
+      </enderEmit>
+      <CRT>3</CRT>
+    </emit>
+    <rem>
+      <CNPJ>04058687000177</CNPJ>
+      <IE>103456789</IE>
+      <xNome>REMETENTE EXEMPLO LTDA</xNome>
+      <enderReme>
+        <xLgr>AVENIDA EXEMPLO</xLgr>
+        <nro>1000</nro>
+        <xBairro>CENTRO</xBairro>
+        <cMun>5208707</cMun>
+        <xMun>GOIANIA</xMun>
+        <CEP>74000000</CEP>
+        <UF>GO</UF>
+        <cPais>1058</cPais>
+        <xPais>BRASIL</xPais>
+      </enderReme>
+    </rem>
+    <dest>
+      <CNPJ>12285276000142</CNPJ>
+      <IE>109876543</IE>
+      <xNome>DESTINATARIO EXEMPLO LTDA</xNome>
+      <enderDest>
+        <xLgr>AVENIDA DO DESTINO</xLgr>
+        <nro>200</nro>
+        <xBairro>DISTRITO INDUSTRIAL</xBairro>
+        <cMun>5103403</cMun>
+        <xMun>CUIABA</xMun>
+        <CEP>78000000</CEP>
+        <UF>MT</UF>
+        <cPais>1058</cPais>
+        <xPais>BRASIL</xPais>
+      </enderDest>
+    </dest>
+    <vPrest>
+      <vTPrest>1500.00</vTPrest>
+      <vRec>1500.00</vRec>
+      <Comp>
+        <xNome>FRETE PESO</xNome>
+        <vComp>1200.00</vComp>
+      </Comp>
+      <Comp>
+        <xNome>PEDAGIO</xNome>
+        <vComp>300.00</vComp>
+      </Comp>
+    </vPrest>
+    <imp>
+      <ICMS>
+        <ICMS00>
+          <CST>00</CST>
+          <vBC>1500.00</vBC>
+          <pICMS>12.00</pICMS>
+          <vICMS>180.00</vICMS>
+        </ICMS00>
+      </ICMS>
+    </imp>
+    <infCTeNorm>
+      <infCarga>
+        <vCarga>50000.00</vCarga>
+        <proPred>MERCADORIA EM GERAL</proPred>
+        <infQ>
+          <cUnid>01</cUnid>
+          <tpMed>PESO BRUTO</tpMed>
+          <qCarga>15000.0000</qCarga>
+        </infQ>
+      </infCarga>
+      <infDoc>
+        <infNFe>
+          <chave>52261104058687000177550010000001001123456780</chave>
+        </infNFe>
+      </infDoc>
+      <infModal versaoModal="4.00">
+        <rodo>
+          <RNTRC>12345678</RNTRC>
+        </rodo>
+      </infModal>
+    </infCTeNorm>
+  </infCte>
+</CTe>
