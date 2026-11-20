@@ -52,6 +52,8 @@ namespace application.services
                         {
                             var value = child.Value ?? string.Empty;
                             value = value.Replace("\r\n", " ").Replace('\r', ' ').Replace('\n', ' ').Replace('\t', ' ');
+                            // Remove BOM, caractere de substituição (texto mal decodificado) e controles
+                            value = new string(value.Where(ch => ch != '\uFEFF' && ch != '\uFFFD' && !char.IsControl(ch)).ToArray());
                             child.Value = value.Trim();
                         }
                         break;

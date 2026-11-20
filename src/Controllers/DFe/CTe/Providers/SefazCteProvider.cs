@@ -179,7 +179,8 @@ namespace application.services.Controllers.DFe.CTe.Providers
                 cleanDoc = cleanKey.Substring(6, 14);
 
             var docTag = cleanDoc.Length == 11 ? $"<CPF>{cleanDoc}</CPF>" : $"<CNPJ>{cleanDoc}</CNPJ>";
-            var idEvento = $"ID110111{cleanKey}{nSeqEvento:D2}";
+            // No CT-e 4.00 o atributo Id de <infEvento> usa nSeqEvento com 3 dígitos (total 55 caracteres: ID + 6 + 44 + 3)
+            var idEvento = $"ID110111{cleanKey}{nSeqEvento:D3}";
             var dhEvento = DateTimeOffset.Now.ToString("yyyy-MM-ddTHH:mm:sszzz");
             var sanitizedJust = global::XmlSanitizer.RemoverAcentos(xJust.Trim());
 

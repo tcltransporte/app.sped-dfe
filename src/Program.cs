@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options =>
 {
+    options.InputFormatters.Insert(0, new application.services.Utf8XmlInputFormatter());
     options.InputFormatters.Add(new XmlSerializerInputFormatter(options)
     {
         SupportedMediaTypes =
