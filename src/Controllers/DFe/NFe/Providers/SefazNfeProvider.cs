@@ -89,12 +89,7 @@ namespace application.services.Controllers.DFe.NFe.Providers
             if (string.IsNullOrWhiteSpace(endpoints.NFeAutorizacao))
                 throw new InvalidOperationException($"Endpoint NFeAutorizacao não configurado para a UF {cUF}.");
 
-            var soapEnvelope = $@"<?xml version=""1.0"" encoding=""utf-8""?>
-<soap12:Envelope xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:soap12=""http://www.w3.org/2003/05/soap-envelope"">
-  <soap12:Body>
-    <nfeDadosMsgZip xmlns=""http://www.portalfiscal.inf.br/nfe/wsdl/NFeAutorizacao4"">{gzipBase64}</nfeDadosMsgZip>
-  </soap12:Body>
-</soap12:Envelope>";
+            var soapEnvelope = $"<?xml version=\"1.0\" encoding=\"utf-8\"?><soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\"><soap12:Body><nfeDadosMsgZip xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeAutorizacao4\">{gzipBase64}</nfeDadosMsgZip></soap12:Body></soap12:Envelope>";
 
             var soapResponse = await SendSoap12Async(
                 certificate,
@@ -149,14 +144,7 @@ namespace application.services.Controllers.DFe.NFe.Providers
 
             var distDFeIntXml = $"<distDFeInt versao=\"1.00\" xmlns=\"{NfeNamespace}\"><tpAmb>{tpAmb}</tpAmb><cUFAutor>{cUFAutor}</cUFAutor>{docTag}{queryBlock}</distDFeInt>";
 
-            var soapEnvelope = $@"<?xml version=""1.0"" encoding=""utf-8""?>
-<soap12:Envelope xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:soap12=""http://www.w3.org/2003/05/soap-envelope"">
-  <soap12:Body>
-    <nfeDistDFeInteresse xmlns=""http://www.portalfiscal.inf.br/nfe/wsdl/NFeDistribuicaoDFe"">
-      <nfeDadosMsg>{distDFeIntXml}</nfeDadosMsg>
-    </nfeDistDFeInteresse>
-  </soap12:Body>
-</soap12:Envelope>";
+            var soapEnvelope = $"<?xml version=\"1.0\" encoding=\"utf-8\"?><soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\"><soap12:Body><nfeDistDFeInteresse xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeDistribuicaoDFe\"><nfeDadosMsg>{distDFeIntXml}</nfeDadosMsg></nfeDistDFeInteresse></soap12:Body></soap12:Envelope>";
 
             var endpoint = configStore.GetConfig().ResolveDistribuicaoEndpoint(tpAmb == "2");
             var soapResponse = await SendSoap12Async(
@@ -214,12 +202,7 @@ namespace application.services.Controllers.DFe.NFe.Providers
             var infEventoEl = (XmlElement)eventoDoc.SelectSingleNode("//*[local-name()='infEvento']")!;
             SignElementById(eventoDoc, certificate, infEventoEl, idEvento);
 
-            var soapEnvelope = $@"<?xml version=""1.0"" encoding=""utf-8""?>
-<soap12:Envelope xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:soap12=""http://www.w3.org/2003/05/soap-envelope"">
-  <soap12:Body>
-    <nfeDadosMsg xmlns=""http://www.portalfiscal.inf.br/nfe/wsdl/NFeRecepcaoEvento4"">{eventoDoc.DocumentElement!.OuterXml}</nfeDadosMsg>
-  </soap12:Body>
-</soap12:Envelope>";
+            var soapEnvelope = $"<?xml version=\"1.0\" encoding=\"utf-8\"?><soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\"><soap12:Body><nfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeRecepcaoEvento4\">{eventoDoc.DocumentElement!.OuterXml}</nfeDadosMsg></soap12:Body></soap12:Envelope>";
 
             var endpoint = configStore.GetConfig().ResolveNationalEventoEndpoint(tpAmb == "2");
             var soapResponse = await SendSoap12Async(
@@ -274,12 +257,7 @@ namespace application.services.Controllers.DFe.NFe.Providers
             if (string.IsNullOrWhiteSpace(endpoints.NFeRecepcaoEvento))
                 throw new InvalidOperationException($"Endpoint NFeRecepcaoEvento não configurado para a UF {resolvedCuf}.");
 
-            var soapEnvelope = $@"<?xml version=""1.0"" encoding=""utf-8""?>
-<soap12:Envelope xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:soap12=""http://www.w3.org/2003/05/soap-envelope"">
-  <soap12:Body>
-    <nfeDadosMsg xmlns=""http://www.portalfiscal.inf.br/nfe/wsdl/NFeRecepcaoEvento4"">{eventoDoc.DocumentElement!.OuterXml}</nfeDadosMsg>
-  </soap12:Body>
-</soap12:Envelope>";
+            var soapEnvelope = $"<?xml version=\"1.0\" encoding=\"utf-8\"?><soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\"><soap12:Body><nfeDadosMsg xmlns=\"http://www.portalfiscal.inf.br/nfe/wsdl/NFeRecepcaoEvento4\">{eventoDoc.DocumentElement!.OuterXml}</nfeDadosMsg></soap12:Body></soap12:Envelope>";
 
             var soapResponse = await SendSoap12Async(
                 certificate,
@@ -428,7 +406,11 @@ namespace application.services.Controllers.DFe.NFe.Providers
 
         private static string CompressGzipBase64(string xml)
         {
-            var bytes = Encoding.UTF8.GetBytes(xml);
+            var trimmed = xml.TrimStart('\uFEFF').Trim();
+            if (!trimmed.StartsWith("<?xml", StringComparison.OrdinalIgnoreCase))
+                trimmed = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + trimmed;
+
+            var bytes = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false).GetBytes(trimmed);
             using var output = new MemoryStream();
             using (var gzip = new GZipStream(output, CompressionMode.Compress, leaveOpen: true))
             {
@@ -454,7 +436,7 @@ namespace application.services.Controllers.DFe.NFe.Providers
                 Timeout = TimeSpan.FromSeconds(120)
             };
 
-            using var content = new StringContent(soapEnvelope, Encoding.UTF8);
+            using var content = new StringContent(soapEnvelope, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
             content.Headers.ContentType = MediaTypeHeaderValue.Parse($"application/soap+xml; charset=utf-8; action=\"{actionUrn}\"");
 
             using var response = await client.PostAsync(endpoint, content);

@@ -130,12 +130,7 @@ namespace application.services.Controllers.DFe.MDFe.Providers
 
             var gzipBase64 = CompressGzipBase64(mdfeOuterXml);
 
-            var soapEnvelope = $@"<?xml version=""1.0"" encoding=""utf-8""?>
-<soap12:Envelope xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:soap12=""http://www.w3.org/2003/05/soap-envelope"">
-  <soap12:Body>
-    <mdfeDadosMsg xmlns=""{MdfeSincNamespace}"">{gzipBase64}</mdfeDadosMsg>
-  </soap12:Body>
-</soap12:Envelope>";
+            var soapEnvelope = $"<?xml version=\"1.0\" encoding=\"utf-8\"?><soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\"><soap12:Body><mdfeDadosMsg xmlns=\"{MdfeSincNamespace}\">{gzipBase64}</mdfeDadosMsg></soap12:Body></soap12:Envelope>";
 
             var soapResponse = await SendSoap12Async(
                 certificate,
@@ -192,12 +187,7 @@ namespace application.services.Controllers.DFe.MDFe.Providers
             if (string.IsNullOrWhiteSpace(endpoints.MDFeRecepcaoEvento))
                 throw new InvalidOperationException($"Endpoint MDFeRecepcaoEvento não configurado para a UF {resolvedCuf}.");
 
-            var soapEnvelope = $@"<?xml version=""1.0"" encoding=""utf-8""?>
-<soap12:Envelope xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:soap12=""http://www.w3.org/2003/05/soap-envelope"">
-  <soap12:Body>
-    <mdfeDadosMsg xmlns=""{MdfeEventoNamespace}"">{eventoDoc.DocumentElement!.OuterXml}</mdfeDadosMsg>
-  </soap12:Body>
-</soap12:Envelope>";
+            var soapEnvelope = $"<?xml version=\"1.0\" encoding=\"utf-8\"?><soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\"><soap12:Body><mdfeDadosMsg xmlns=\"{MdfeEventoNamespace}\">{eventoDoc.DocumentElement!.OuterXml}</mdfeDadosMsg></soap12:Body></soap12:Envelope>";
 
             var soapResponse = await SendSoap12Async(
                 certificate,
@@ -253,12 +243,7 @@ namespace application.services.Controllers.DFe.MDFe.Providers
             if (string.IsNullOrWhiteSpace(endpoints.MDFeRecepcaoEvento))
                 throw new InvalidOperationException($"Endpoint MDFeRecepcaoEvento não configurado para a UF {resolvedCuf}.");
 
-            var soapEnvelope = $@"<?xml version=""1.0"" encoding=""utf-8""?>
-<soap12:Envelope xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:soap12=""http://www.w3.org/2003/05/soap-envelope"">
-  <soap12:Body>
-    <mdfeDadosMsg xmlns=""{MdfeEventoNamespace}"">{eventoDoc.DocumentElement!.OuterXml}</mdfeDadosMsg>
-  </soap12:Body>
-</soap12:Envelope>";
+            var soapEnvelope = $"<?xml version=\"1.0\" encoding=\"utf-8\"?><soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\"><soap12:Body><mdfeDadosMsg xmlns=\"{MdfeEventoNamespace}\">{eventoDoc.DocumentElement!.OuterXml}</mdfeDadosMsg></soap12:Body></soap12:Envelope>";
 
             var soapResponse = await SendSoap12Async(
                 certificate,
@@ -293,12 +278,7 @@ namespace application.services.Controllers.DFe.MDFe.Providers
             if (string.IsNullOrWhiteSpace(endpoints.MDFeConsNaoEnc))
                 throw new InvalidOperationException($"Endpoint MDFeConsNaoEnc não configurado.");
 
-            var soapEnvelope = $@"<?xml version=""1.0"" encoding=""utf-8""?>
-<soap12:Envelope xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:soap12=""http://www.w3.org/2003/05/soap-envelope"">
-  <soap12:Body>
-    <mdfeDadosMsg xmlns=""{MdfeConsNaoEncNamespace}"">{consXml}</mdfeDadosMsg>
-  </soap12:Body>
-</soap12:Envelope>";
+            var soapEnvelope = $"<?xml version=\"1.0\" encoding=\"utf-8\"?><soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\"><soap12:Body><mdfeDadosMsg xmlns=\"{MdfeConsNaoEncNamespace}\">{consXml}</mdfeDadosMsg></soap12:Body></soap12:Envelope>";
 
             var soapResponse = await SendSoap12Async(
                 certificate,
@@ -461,7 +441,11 @@ namespace application.services.Controllers.DFe.MDFe.Providers
 
         private static string CompressGzipBase64(string xml)
         {
-            var bytes = Encoding.UTF8.GetBytes(xml);
+            var trimmed = xml.TrimStart('\uFEFF').Trim();
+            if (!trimmed.StartsWith("<?xml", StringComparison.OrdinalIgnoreCase))
+                trimmed = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + trimmed;
+
+            var bytes = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false).GetBytes(trimmed);
             using var output = new MemoryStream();
             using (var gzip = new GZipStream(output, CompressionMode.Compress, leaveOpen: true))
             {
@@ -487,7 +471,7 @@ namespace application.services.Controllers.DFe.MDFe.Providers
                 Timeout = TimeSpan.FromSeconds(120)
             };
 
-            using var content = new StringContent(soapEnvelope, Encoding.UTF8);
+            using var content = new StringContent(soapEnvelope, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
             content.Headers.ContentType = MediaTypeHeaderValue.Parse($"application/soap+xml; charset=utf-8; action=\"{actionUrn}\"");
 
             using var response = await client.PostAsync(endpoint, content);
